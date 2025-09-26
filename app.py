@@ -34,7 +34,7 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    password_hash = db.Column(db.String(120), nullable=False)
+    password_hash = db.Column(db.String(255), nullable=False)  # Increased for longer hashes
     first_name = db.Column(db.String(50), nullable=False)
     last_name = db.Column(db.String(50), nullable=False)
     phone = db.Column(db.String(20), nullable=False)
@@ -384,6 +384,24 @@ def init_database():
                 return "Database already has data. No initialization needed."
     except Exception as e:
         return f"Error initializing database: {str(e)}"
+
+@app.route('/migrate-db')
+def migrate_database():
+    """Migrate database schema - for handling schema changes"""
+    try:
+        with app.app_context():
+            # Drop and recreate all tables (for development)
+            # In production, you'd use proper migrations
+            db.drop_all()
+            db.create_all()
+            
+            # Recreate demo data
+            from demo_data import create_demo_data
+            create_demo_data()
+            
+            return "Database migrated successfully with new schema!"
+    except Exception as e:
+        return f"Error migrating database: {str(e)}"
 
 def initialize_database():
     """Initialize database tables"""
