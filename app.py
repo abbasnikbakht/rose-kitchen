@@ -143,8 +143,27 @@ def load_user(user_id):
 # Routes
 @app.route('/')
 def index():
-    featured_cooks = CookProfile.query.filter_by(is_available=True).limit(6).all()
-    return render_template('index.html', featured_cooks=featured_cooks)
+    try:
+        featured_cooks = CookProfile.query.filter_by(is_available=True).limit(6).all()
+        return render_template('index.html', featured_cooks=featured_cooks)
+    except Exception as e:
+        # If database tables don't exist yet, show a setup message
+        return f"""
+        <h1>گل سرخ Rose Kitchen</h1>
+        <p>Welcome to Rose Kitchen! The database is being set up.</p>
+        <p>Please visit <a href="/init-db">/init-db</a> to initialize the database with demo data.</p>
+        <p>Error: {str(e)}</p>
+        """
+
+@app.route('/health')
+def health_check():
+    """Health check endpoint for deployment monitoring"""
+    try:
+        # Try to query the database
+        User.query.count()
+        return "OK - Database connected"
+    except Exception as e:
+        return f"Database error: {str(e)}", 500
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -352,6 +371,7 @@ def init_database():
     """Initialize database with demo data - for deployment setup"""
     try:
         with app.app_context():
+            # Create all tables
             db.create_all()
             
             # Check if demo data already exists
@@ -364,6 +384,18 @@ def init_database():
                 return "Database already has data. No initialization needed."
     except Exception as e:
         return f"Error initializing database: {str(e)}"
+
+def initialize_database():
+    """Initialize database tables"""
+    try:
+        with app.app_context():
+            db.create_all()
+            print("✅ Database tables created successfully!")
+    except Exception as e:
+        print(f"❌ Error creating tables: {e}")
+
+# Initialize database on app startup
+initialize_database()
 
 if __name__ == '__main__':
     with app.app_context():

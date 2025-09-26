@@ -12,6 +12,11 @@ import random
 def create_demo_data():
     """Create demo data for testing the application"""
     
+    # Import app here to avoid circular imports
+    from app import app, db, User, CookProfile, Booking, Review
+    from werkzeug.security import generate_password_hash
+    from datetime import datetime, date, time, timedelta
+    
     with app.app_context():
         # Clear existing data
         print("🧹 Clearing existing data...")
