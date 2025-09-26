@@ -67,8 +67,8 @@
                     <div class="feature-icon">
                         <i class="fas fa-star"></i>
                     </div>
-                    <h4>Authentic Persian Chefs</h4>
-                    <p class="text-muted">Our chefs are masters of traditional Iranian cuisine, trained in the art of Persian cooking with authentic recipes passed down through generations.</p>
+                    <h4>{{ get_translated_text('authentic_persian_chefs') }}</h4>
+                    <p class="text-muted">{{ get_translated_text('authentic_persian_chefs_desc') }}</p>
                 </div>
             </div>
             <div class="col-md-4">
@@ -76,8 +76,8 @@
                     <div class="feature-icon">
                         <i class="fas fa-home"></i>
                     </div>
-                    <h4>Traditional Persian Experience</h4>
-                    <p class="text-muted">Experience the warmth of Persian hospitality in your own home with traditional cooking methods and authentic ingredients.</p>
+                    <h4>{{ get_translated_text('traditional_persian_experience') }}</h4>
+                    <p class="text-muted">{{ get_translated_text('traditional_persian_experience_desc') }}</p>
                 </div>
             </div>
             <div class="col-md-4">
@@ -85,8 +85,8 @@
                     <div class="feature-icon">
                         <i class="fas fa-calendar-check"></i>
                     </div>
-                    <h4>Easy Booking</h4>
-                    <p class="text-muted">Simple and secure booking process. Choose your Persian chef, set your date, and enjoy an authentic Iranian culinary experience.</p>
+                    <h4>{{ get_translated_text('easy_booking') }}</h4>
+                    <p class="text-muted">{{ get_translated_text('easy_booking_desc') }}</p>
                 </div>
             </div>
         </div>
@@ -99,8 +99,8 @@
     <div class="container">
         <div class="row mb-5">
             <div class="col-12 text-center">
-                <h2 class="display-5 fw-bold">Featured Persian Chefs</h2>
-                <p class="lead text-muted">Meet our master chefs specializing in authentic Iranian cuisine</p>
+                <h2 class="display-5 fw-bold">{{ get_translated_text('featured_chefs') }}</h2>
+                <p class="lead text-muted">{{ get_translated_text('featured_chefs_desc') }}</p>
             </div>
         </div>
         
@@ -115,7 +115,7 @@
                             </div>
                             <div>
                                 <h5 class="card-title mb-0">{{ cook.cook.first_name }} {{ cook.cook.last_name }}</h5>
-                                <small class="text-muted">{{ cook.experience_years }} years experience</small>
+                                <small class="text-muted">{{ cook.experience_years }} {{ get_translated_text('years_experience') }}</small>
                             </div>
                         </div>
                         
@@ -136,7 +136,7 @@
                                 <small class="text-muted">/hour</small>
                             </div>
                             <a href="{{ url_for('cook_profile', cook_id=cook.id) }}" class="btn btn-primary btn-sm">
-                                View Profile
+                                {{ get_translated_text('view_profile') }}
                             </a>
                         </div>
                     </div>
@@ -147,7 +147,7 @@
         
         <div class="text-center mt-4">
             <a href="{{ url_for('browse_cooks') }}" class="btn btn-outline-primary btn-lg">
-                View All Cooks <i class="fas fa-arrow-right ms-2"></i>
+                {{ get_translated_text('view_all_chefs') }} <i class="fas fa-arrow-right ms-2"></i>
             </a>
         </div>
     </div>
@@ -159,8 +159,8 @@
     <div class="container">
         <div class="row text-center mb-5">
             <div class="col-12">
-                <h2 class="display-5 fw-bold">How It Works</h2>
-                <p class="lead text-muted">Experience authentic Persian cuisine in just a few simple steps</p>
+                <h2 class="display-5 fw-bold">{{ get_translated_text('how_it_works') }}</h2>
+                <p class="lead text-muted">{{ get_translated_text('how_it_works_desc') }}</p>
             </div>
         </div>
         
@@ -170,8 +170,8 @@
                     <div class="feature-icon bg-primary text-white">
                         <span class="fw-bold">1</span>
                     </div>
-                    <h4>Browse Persian Chefs</h4>
-                    <p class="text-muted">Search through our network of authentic Iranian chefs, read their profiles, specialties, and reviews.</p>
+                    <h4>{{ get_translated_text('browse_persian_chefs') }}</h4>
+                    <p class="text-muted">{{ get_translated_text('browse_persian_chefs_desc') }}</p>
                 </div>
             </div>
             <div class="col-md-4">
@@ -179,8 +179,8 @@
                     <div class="feature-icon bg-primary text-white">
                         <span class="fw-bold">2</span>
                     </div>
-                    <h4>Book Your Persian Chef</h4>
-                    <p class="text-muted">Select your preferred Iranian chef, choose your event date and time, and specify your favorite Persian dishes.</p>
+                    <h4>{{ get_translated_text('book_your_persian_chef') }}</h4>
+                    <p class="text-muted">{{ get_translated_text('book_your_persian_chef_desc') }}</p>
                 </div>
             </div>
             <div class="col-md-4">
@@ -188,8 +188,8 @@
                     <div class="feature-icon bg-primary text-white">
                         <span class="fw-bold">3</span>
                     </div>
-                    <h4>Enjoy Persian Hospitality</h4>
-                    <p class="text-muted">Sit back and relax while your Persian chef prepares authentic Iranian dishes and creates a warm, welcoming atmosphere for your guests.</p>
+                    <h4>{{ get_translated_text('enjoy_authentic_cuisine') }}</h4>
+                    <p class="text-muted">{{ get_translated_text('enjoy_authentic_cuisine_desc') }}</p>
                 </div>
             </div>
         </div>
@@ -200,10 +200,10 @@
 {% if not current_user.is_authenticated %}
 <section class="py-5 bg-primary text-white">
     <div class="container text-center">
-        <h2 class="display-5 fw-bold mb-4">Ready to Experience Persian Cuisine?</h2>
-        <p class="lead mb-4">Join thousands of satisfied customers who have discovered the authentic flavors of Iran in their own homes.</p>
+        <h2 class="display-5 fw-bold mb-4">{{ get_translated_text('ready_to_experience') }}</h2>
+        <p class="lead mb-4">{{ get_translated_text('ready_to_experience_desc') }}</p>
         <a href="{{ url_for('register') }}" class="btn btn-light btn-lg">
-            <i class="fas fa-user-plus me-2"></i>Sign Up Now
+            <i class="fas fa-user-plus me-2"></i>{{ get_translated_text('sign_up_now') }}
         </a>
     </div>
 </section>
