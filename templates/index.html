@@ -10,7 +10,7 @@
             <div class="col-lg-6">
                 <h1 class="display-4 fw-bold mb-4">{{ get_translated_text('welcome_message') }}</h1>
                 <p class="lead mb-4">{{ get_translated_text('tagline') }}</p>
-                <div class="d-flex gap-3">
+                <div class="d-flex gap-3 mb-4">
                     <a href="{{ url_for('browse_cooks') }}" class="btn btn-light btn-lg">
                         <i class="fas fa-search me-2"></i>{{ get_translated_text('cooks') }}
                     </a>
@@ -19,6 +19,21 @@
                             <i class="fas fa-user-plus me-2"></i>{{ get_translated_text('register') }}
                         </a>
                     {% endif %}
+                </div>
+                
+                <!-- Language Switcher in Hero -->
+                <div class="hero-language-switcher">
+                    <p class="text-white-50 mb-2">{{ get_translated_text('language') }}:</p>
+                    <div class="d-flex gap-2">
+                        <a href="{{ url_for('set_language_route', language='en') }}" 
+                           class="btn btn-sm {% if get_current_language() == 'en' %}btn-light{% else %}btn-outline-light{% endif %}">
+                            🇺🇸 English
+                        </a>
+                        <a href="{{ url_for('set_language_route', language='fa') }}" 
+                           class="btn btn-sm {% if get_current_language() == 'fa' %}btn-light{% else %}btn-outline-light{% endif %}">
+                            🇮🇷 فارسی
+                        </a>
+                    </div>
                 </div>
             </div>
             <div class="col-lg-6">

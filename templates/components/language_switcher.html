@@ -1,6 +1,6 @@
 <!-- Language Switcher Component -->
 <div class="language-switcher dropdown">
-    <button class="btn btn-outline-light dropdown-toggle" type="button" id="languageDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+    <button class="btn btn-outline-primary dropdown-toggle" type="button" id="languageDropdown" data-bs-toggle="dropdown" aria-expanded="false">
         <i class="fas fa-globe me-2"></i>
         {% if get_current_language() == 'fa' %}
             <span class="flag-icon">🇮🇷</span> فارسی
@@ -24,15 +24,17 @@
 
 <style>
 .language-switcher .dropdown-toggle {
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
+    border: 1px solid #c41e3a;
+    background: white;
+    color: #c41e3a;
     transition: all 0.3s ease;
+    font-weight: 500;
 }
 
 .language-switcher .dropdown-toggle:hover {
-    background: rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.5);
+    background: #c41e3a;
+    color: white;
+    border-color: #c41e3a;
 }
 
 .language-switcher .dropdown-menu {

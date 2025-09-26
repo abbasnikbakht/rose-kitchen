@@ -60,6 +60,28 @@
         [dir="rtl"] body {
             font-family: 'Vazir', 'Tahoma', 'Arial', sans-serif;
         }
+        
+        /* Language Links */
+        .language-links {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .language-links .nav-link {
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            font-size: 1.2em;
+        }
+        
+        .language-links .nav-link:hover {
+            background-color: rgba(196, 30, 58, 0.1);
+        }
+        
+        .language-links .nav-link.active {
+            background-color: #c41e3a;
+            color: white;
+        }
 
         .navbar-brand {
             font-weight: 700;
@@ -216,6 +238,14 @@
                     <!-- Language Switcher -->
                     <li class="nav-item">
                         {% include 'components/language_switcher.html' %}
+                    </li>
+                    
+                    <!-- Simple Language Links (Fallback) -->
+                    <li class="nav-item">
+                        <div class="language-links">
+                            <a href="{{ url_for('set_language_route', language='en') }}" class="nav-link {% if get_current_language() == 'en' %}active{% endif %}">🇺🇸</a>
+                            <a href="{{ url_for('set_language_route', language='fa') }}" class="nav-link {% if get_current_language() == 'fa' %}active{% endif %}">🇮🇷</a>
+                        </div>
                     </li>
                     
                     {% if current_user.is_authenticated %}
