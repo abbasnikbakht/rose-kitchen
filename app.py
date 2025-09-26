@@ -15,7 +15,11 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
 # Use PostgreSQL in production, SQLite in development
 if os.environ.get('DATABASE_URL'):
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+    # Handle PostgreSQL URL format for Render
+    database_url = os.environ.get('DATABASE_URL')
+    if database_url.startswith('postgres://'):
+        database_url = database_url.replace('postgres://', 'postgresql://', 1)
+    app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 else:
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///kitchen_booking.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -342,6 +346,24 @@ def update_booking_status(booking_id):
         flash(f'Booking status updated to {new_status}', 'success')
     
     return redirect(url_for('dashboard'))
+
+@app.route('/init-db')
+def init_database():
+    """Initialize database with demo data - for deployment setup"""
+    try:
+        with app.app_context():
+            db.create_all()
+            
+            # Check if demo data already exists
+            if User.query.count() == 0:
+                # Import and run demo data creation
+                from demo_data import create_demo_data
+                create_demo_data()
+                return "Database initialized with demo data successfully!"
+            else:
+                return "Database already has data. No initialization needed."
+    except Exception as e:
+        return f"Error initializing database: {str(e)}"
 
 if __name__ == '__main__':
     with app.app_context():
