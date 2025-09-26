@@ -416,45 +416,45 @@ def initialize_database():
 # Initialize database on app startup
 initialize_database()
 
+# Language support functions
+def get_current_language():
+    """Get current language from session, default to English"""
+    return session.get('language', 'en')
+
+def set_language(language):
+    """Set language in session"""
+    if language in get_available_languages():
+        session['language'] = language
+
+def get_translated_text(key):
+    """Get translated text for current language"""
+    return get_translation(key, get_current_language())
+
+def is_rtl():
+    """Check if current language is right-to-left"""
+    return is_rtl_language(get_current_language())
+
+# Make functions available in templates
+@app.context_processor
+def inject_language_functions():
+    return {
+        'get_translated_text': get_translated_text,
+        'get_current_language': get_current_language,
+        'is_rtl': is_rtl,
+        'get_available_languages': get_available_languages
+    }
+
+# Language switching route
+@app.route('/set_language/<language>')
+def set_language_route(language):
+    """Set language and redirect back"""
+    set_language(language)
+    return redirect(request.referrer or url_for('index'))
+
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
     
-    # Language support functions
-    def get_current_language():
-        """Get current language from session, default to English"""
-        return session.get('language', 'en')
-
-    def set_language(language):
-        """Set language in session"""
-        if language in get_available_languages():
-            session['language'] = language
-
-    def get_translated_text(key):
-        """Get translated text for current language"""
-        return get_translation(key, get_current_language())
-
-    def is_rtl():
-        """Check if current language is right-to-left"""
-        return is_rtl_language(get_current_language())
-
-    # Make functions available in templates
-    @app.context_processor
-    def inject_language_functions():
-        return {
-            'get_translated_text': get_translated_text,
-            'get_current_language': get_current_language,
-            'is_rtl': is_rtl,
-            'get_available_languages': get_available_languages
-        }
-
-    # Language switching route
-    @app.route('/set_language/<language>')
-    def set_language_route(language):
-        """Set language and redirect back"""
-        set_language(language)
-        return redirect(request.referrer or url_for('index'))
-
     # Get port from environment variable (for deployment)
     port = int(os.environ.get('PORT', 5000))
     debug = os.environ.get('FLASK_ENV') != 'production'
