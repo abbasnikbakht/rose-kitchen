@@ -55,7 +55,7 @@ def create_demo_data():
                 first_name='Hassan',
                 last_name='Mirza',
                 phone='555-0103',
-                address='789 Hala Avenue, Shiraz, Iran',
+                address='789 Halal Avenue, Shiraz, Iran',
                 is_cook=False
             )
         ]
@@ -86,7 +86,7 @@ def create_demo_data():
                 username='chef_hala',
                 email='hala@example.com',
                 password_hash=generate_password_hash('password123'),
-                first_name='Hala',
+                first_name='Halal',
                 last_name='Kazemi',
                 phone='555-0203',
                 address='987 Shiraz Boulevard, Shiraz, Iran',
@@ -228,7 +228,7 @@ def create_demo_data():
                 reviewer_id=customers[2].id,
                 cook_id=cook_profiles[2].id,
                 rating=5,
-                comment="Hala was absolutely fantastic! Her authentic Shiraz cuisine and traditional Persian hospitality made our corporate event unforgettable. The Kalam Polo and Faloodeh were exceptional."
+                comment="Halal was absolutely fantastic! Her authentic Shiraz cuisine and traditional Persian hospitality made our corporate event unforgettable. The Kalam Polo and Faloodeh were exceptional."
             ),
             Review(
                 booking_id=bookings[2].id,
@@ -256,7 +256,7 @@ def create_demo_data():
         print("\n👨‍🍳 PERSIAN CHEFS:")
         print("   • rose@example.com / password123 (Tehran Cuisine)")
         print("   • soheila_chef@example.com / password123 (Isfahan Cuisine)")
-        print("   • hala@example.com / password123 (Shiraz Cuisine)")
+        print("   • hala@example.com / password123 (Shiraz Cuisine - Halal)")
         print("   • iran@example.com / password123 (Traditional Iranian)")
         print("=" * 50)
         print("🚀 You can now run the application with: python run.py")

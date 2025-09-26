@@ -19,7 +19,7 @@ Your گل سرخ Rose Kitchen application is now ready to use! Here's how to get
 #### Persian Chef Accounts (for offering authentic Iranian cuisine):
 - **Email:** rose@example.com | **Password:** password123 (Tehran Cuisine)
 - **Email:** soheila_chef@example.com | **Password:** password123 (Isfahan Cuisine)
-- **Email:** hala@example.com | **Password:** password123 (Shiraz Cuisine)
+- **Email:** hala@example.com | **Password:** password123 (Shiraz Cuisine - Halal)
 - **Email:** iran@example.com | **Password:** password123 (Traditional Iranian)
 
 ### 3. How to Use the Application
