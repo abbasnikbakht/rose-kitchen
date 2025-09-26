@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+
+{% block title %}Home - گل سرخ Rose Kitchen{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">Authentic Persian Chefs at Your Doorstep</h1>
+                <p class="lead mb-4">Book experienced Iranian chefs to bring the rich flavors of Persia to your home. From traditional Isfahan dishes to modern Tehran cuisine, experience the art of Persian cooking.</p>
+                <div class="d-flex gap-3">
+                    <a href="{{ url_for('browse_cooks') }}" class="btn btn-light btn-lg">
+                        <i class="fas fa-search me-2"></i>Find Cooks
+                    </a>
+                    {% if not current_user.is_authenticated %}
+                        <a href="{{ url_for('register') }}" class="btn btn-outline-light btn-lg">
+                            <i class="fas fa-user-plus me-2"></i>Sign Up
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="text-center">
+                    <i class="fas fa-utensils" style="font-size: 200px; opacity: 0.3;"></i>
+                    <div class="mt-3">
+                        <span class="badge bg-light text-dark fs-6 me-2">Isfahan</span>
+                        <span class="badge bg-light text-dark fs-6 me-2">Tehran</span>
+                        <span class="badge bg-light text-dark fs-6 me-2">Shiraz</span>
+                        <span class="badge bg-light text-dark fs-6">Hala</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-12">
+                <h2 class="display-5 fw-bold">Why Choose گل سرخ Rose Kitchen?</h2>
+                <p class="lead text-muted">Experience the authentic flavors of Persia with our professional Iranian chefs</p>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="text-center">
+                    <div class="feature-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h4>Authentic Persian Chefs</h4>
+                    <p class="text-muted">Our chefs are masters of traditional Iranian cuisine, trained in the art of Persian cooking with authentic recipes passed down through generations.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="text-center">
+                    <div class="feature-icon">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <h4>Traditional Persian Experience</h4>
+                    <p class="text-muted">Experience the warmth of Persian hospitality in your own home with traditional cooking methods and authentic ingredients.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="text-center">
+                    <div class="feature-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <h4>Easy Booking</h4>
+                    <p class="text-muted">Simple and secure booking process. Choose your Persian chef, set your date, and enjoy an authentic Iranian culinary experience.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Cooks Section -->
+{% if featured_cooks %}
+<section class="py-5 bg-white">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col-12 text-center">
+                <h2 class="display-5 fw-bold">Featured Persian Chefs</h2>
+                <p class="lead text-muted">Meet our master chefs specializing in authentic Iranian cuisine</p>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            {% for cook in featured_cooks %}
+            <div class="col-lg-4 col-md-6">
+                <div class="card cook-card h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                                <i class="fas fa-user text-white"></i>
+                            </div>
+                            <div>
+                                <h5 class="card-title mb-0">{{ cook.cook.first_name }} {{ cook.cook.last_name }}</h5>
+                                <small class="text-muted">{{ cook.experience_years }} years experience</small>
+                            </div>
+                        </div>
+                        
+                        <p class="card-text text-muted">{{ cook.bio[:100] }}{% if cook.bio|length > 100 %}...{% endif %}</p>
+                        
+                        <div class="mb-3">
+                            <strong>Specialties:</strong>
+                            <div class="mt-1">
+                                {% for specialty in cook.specialties.split('\n')[:3] %}
+                                    <span class="badge bg-light text-dark me-1">{{ specialty.strip() }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <span class="h5 text-primary">${{ "%.2f"|format(cook.hourly_rate) }}</span>
+                                <small class="text-muted">/hour</small>
+                            </div>
+                            <a href="{{ url_for('cook_profile', cook_id=cook.id) }}" class="btn btn-primary btn-sm">
+                                View Profile
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-4">
+            <a href="{{ url_for('browse_cooks') }}" class="btn btn-outline-primary btn-lg">
+                View All Cooks <i class="fas fa-arrow-right ms-2"></i>
+            </a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- How It Works Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-12">
+                <h2 class="display-5 fw-bold">How It Works</h2>
+                <p class="lead text-muted">Experience authentic Persian cuisine in just a few simple steps</p>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="text-center">
+                    <div class="feature-icon bg-primary text-white">
+                        <span class="fw-bold">1</span>
+                    </div>
+                    <h4>Browse Persian Chefs</h4>
+                    <p class="text-muted">Search through our network of authentic Iranian chefs, read their profiles, specialties, and reviews.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="text-center">
+                    <div class="feature-icon bg-primary text-white">
+                        <span class="fw-bold">2</span>
+                    </div>
+                    <h4>Book Your Persian Chef</h4>
+                    <p class="text-muted">Select your preferred Iranian chef, choose your event date and time, and specify your favorite Persian dishes.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="text-center">
+                    <div class="feature-icon bg-primary text-white">
+                        <span class="fw-bold">3</span>
+                    </div>
+                    <h4>Enjoy Persian Hospitality</h4>
+                    <p class="text-muted">Sit back and relax while your Persian chef prepares authentic Iranian dishes and creates a warm, welcoming atmosphere for your guests.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+{% if not current_user.is_authenticated %}
+<section class="py-5 bg-primary text-white">
+    <div class="container text-center">
+        <h2 class="display-5 fw-bold mb-4">Ready to Experience Persian Cuisine?</h2>
+        <p class="lead mb-4">Join thousands of satisfied customers who have discovered the authentic flavors of Iran in their own homes.</p>
+        <a href="{{ url_for('register') }}" class="btn btn-light btn-lg">
+            <i class="fas fa-user-plus me-2"></i>Sign Up Now
+        </a>
+    </div>
+</section>
+{% endif %}
+{% endblock %}

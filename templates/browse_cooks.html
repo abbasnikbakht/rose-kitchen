@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+
+{% block title %}Find Persian Chefs - گل سرخ Rose Kitchen{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <h1 class="display-4 fw-bold">Find Your Perfect Persian Chef</h1>
+            <p class="lead text-muted">Browse our network of authentic Iranian chefs and discover the rich flavors of Persia</p>
+        </div>
+    </div>
+    
+    <!-- Search and Filter Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <form class="row g-3">
+                        <div class="col-md-4">
+                            <label for="search" class="form-label">Search by name or specialty</label>
+                            <input type="text" class="form-control" id="search" placeholder="e.g., Persian cuisine, Ghormeh Sabzi, Rose">
+                        </div>
+                        <div class="col-md-3">
+                            <label for="maxRate" class="form-label">Max hourly rate</label>
+                            <select class="form-select" id="maxRate">
+                                <option value="">Any rate</option>
+                                <option value="50">Under $50</option>
+                                <option value="75">Under $75</option>
+                                <option value="100">Under $100</option>
+                                <option value="150">Under $150</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="experience" class="form-label">Min experience</label>
+                            <select class="form-select" id="experience">
+                                <option value="">Any experience</option>
+                                <option value="1">1+ years</option>
+                                <option value="3">3+ years</option>
+                                <option value="5">5+ years</option>
+                                <option value="10">10+ years</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">&nbsp;</label>
+                            <button type="submit" class="btn btn-primary d-block w-100">
+                                <i class="fas fa-search me-1"></i>Search
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Cooks Grid -->
+    <div class="row g-4">
+        {% for cook in cooks %}
+        <div class="col-lg-4 col-md-6">
+            <div class="card cook-card h-100">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 60px; height: 60px;">
+                            <i class="fas fa-user text-white" style="font-size: 24px;"></i>
+                        </div>
+                        <div>
+                            <h5 class="card-title mb-0">{{ cook.cook.first_name }} {{ cook.cook.last_name }}</h5>
+                            <small class="text-muted">{{ cook.experience_years }} years experience</small>
+                        </div>
+                    </div>
+                    
+                    <p class="card-text text-muted mb-3">{{ cook.bio[:120] }}{% if cook.bio|length > 120 %}...{% endif %}</p>
+                    
+                    <div class="mb-3">
+                        <strong>Specialties:</strong>
+                        <div class="mt-1">
+                            {% for specialty in cook.specialties.split('\n')[:4] %}
+                                <span class="badge bg-light text-dark me-1 mb-1">{{ specialty.strip() }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-map-marker-alt text-muted me-2"></i>
+                            <small class="text-muted">Service radius: {{ cook.service_radius }} miles</small>
+                        </div>
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-clock text-muted me-2"></i>
+                            <small class="text-muted">Available: {{ 'Yes' if cook.is_available else 'No' }}</small>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <span class="h4 text-primary">${{ "%.2f"|format(cook.hourly_rate) }}</span>
+                            <small class="text-muted">/hour</small>
+                        </div>
+                        <div>
+                            <a href="{{ url_for('cook_profile', cook_id=cook.id) }}" class="btn btn-outline-primary btn-sm me-2">
+                                View Profile
+                            </a>
+                            {% if cook.is_available %}
+                                <a href="{{ url_for('book_cook', cook_id=cook.id) }}" class="btn btn-primary btn-sm">
+                                    Book Now
+                                </a>
+                            {% else %}
+                                <button class="btn btn-secondary btn-sm" disabled>
+                                    Unavailable
+                                </button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="col-12">
+            <div class="text-center py-5">
+                <i class="fas fa-search text-muted" style="font-size: 4rem;"></i>
+                <h3 class="mt-3">No Persian chefs found</h3>
+                <p class="text-muted">Try adjusting your search criteria or check back later for new Iranian chefs.</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <!-- Pagination would go here -->
+    {% if cooks %}
+    <div class="row mt-5">
+        <div class="col-12">
+            <nav aria-label="Cooks pagination">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1">Previous</a>
+                    </li>
+                    <li class="page-item active">
+                        <a class="page-link" href="#">1</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">2</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">3</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
