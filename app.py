@@ -312,8 +312,14 @@ def calculate_booking_total(chef_profile, guest_count, menu_price=None):
 @app.route('/')
 def index():
     """Home page"""
-    featured_chefs = ChefProfile.query.filter_by(is_available=True).order_by(ChefProfile.rating.desc()).limit(6).all()
-    recent_reviews = Review.query.order_by(Review.created_at.desc()).limit(3).all()
+    try:
+        featured_chefs = ChefProfile.query.filter_by(is_available=True).order_by(ChefProfile.rating.desc()).limit(6).all()
+        recent_reviews = Review.query.order_by(Review.created_at.desc()).limit(3).all()
+    except Exception as e:
+        print(f"Database query error: {e}")
+        featured_chefs = []
+        recent_reviews = []
+    
     return render_template('index.html', featured_chefs=featured_chefs, recent_reviews=recent_reviews)
 
 @app.route('/login', methods=['GET', 'POST'])
