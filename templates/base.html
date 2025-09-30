@@ -1,223 +1,28 @@
 <!DOCTYPE html>
-<html lang="{{ get_current_language() }}" {% if is_rtl() %}dir="rtl"{% endif %}>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}گل سرخ - Rose Kitchen{% endblock %}</title>
+    <title>{% block title %}Chef Marketplace - Professional In-Home Cooking Services{% endblock %}</title>
+    
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Vazir:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --primary-color: #c41e3a;  /* Persian Red */
-            --secondary-color: #1e3a8a;  /* Persian Blue */
-            --accent-color: #f59e0b;  /* Persian Gold */
-            --success-color: #059669;  /* Persian Green */
-            --danger-color: #dc2626;
-            --light-bg: #fef7f0;  /* Persian Cream */
-            --dark-text: #1f2937;
-            --light-text: #6b7280;
-            --persian-rose: #e11d48;
-            --isfahan-blue: #1e40af;
-            --hala-gold: #d97706;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--light-bg);
-            color: var(--dark-text);
-        }
-        
-        /* RTL Support */
-        [dir="rtl"] {
-            text-align: right;
-        }
-        
-        [dir="rtl"] .navbar-nav {
-            flex-direction: row-reverse;
-        }
-        
-        [dir="rtl"] .me-2 {
-            margin-left: 0.5rem !important;
-            margin-right: 0 !important;
-        }
-        
-        [dir="rtl"] .ms-2 {
-            margin-right: 0.5rem !important;
-            margin-left: 0 !important;
-        }
-        
-        [dir="rtl"] .text-start {
-            text-align: right !important;
-        }
-        
-        [dir="rtl"] .text-end {
-            text-align: left !important;
-        }
-        
-        /* Persian Font Support */
-        [dir="rtl"] body {
-            font-family: 'Vazir', 'Tahoma', 'Arial', sans-serif;
-        }
-        
-        /* Language Links */
-        .language-links {
-            display: flex;
-            gap: 5px;
-        }
-        
-        .language-links .nav-link {
-            padding: 5px 10px;
-            border-radius: 5px;
-            transition: all 0.3s ease;
-            font-size: 1.2em;
-        }
-        
-        .language-links .nav-link:hover {
-            background-color: rgba(196, 30, 58, 0.1);
-        }
-        
-        .language-links .nav-link.active {
-            background-color: #c41e3a;
-            color: white;
-        }
-
-        .navbar-brand {
-            font-weight: 700;
-            font-size: 1.5rem;
-            color: var(--primary-color) !important;
-            font-family: 'Inter', sans-serif;
-        }
-        
-        .persian-pattern {
-            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c41e3a' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-        }
-
-        .btn-primary {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
-            font-weight: 500;
-        }
-
-        .btn-primary:hover {
-            background-color: #e55a2b;
-            border-color: #e55a2b;
-        }
-
-        .btn-outline-primary {
-            color: var(--primary-color);
-            border-color: var(--primary-color);
-        }
-
-        .btn-outline-primary:hover {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
-        }
-
-        .card {
-            border: none;
-            border-radius: 15px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-        }
-
-        .hero-section {
-            background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
-            color: white;
-            padding: 80px 0;
-        }
-
-        .feature-icon {
-            width: 60px;
-            height: 60px;
-            background-color: var(--primary-color);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            color: white;
-            font-size: 24px;
-        }
-
-        .cook-card {
-            transition: all 0.3s ease;
-        }
-
-        .cook-card:hover {
-            transform: translateY(-8px);
-        }
-
-        .rating-stars {
-            color: var(--accent-color);
-        }
-
-        .status-badge {
-            font-size: 0.8rem;
-            padding: 0.4rem 0.8rem;
-            border-radius: 20px;
-        }
-
-        .status-pending {
-            background-color: #fff3cd;
-            color: #856404;
-        }
-
-        .status-confirmed {
-            background-color: #d1ecf1;
-            color: #0c5460;
-        }
-
-        .status-completed {
-            background-color: #d4edda;
-            color: #155724;
-        }
-
-        .status-cancelled {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-
-        .footer {
-            background-color: var(--secondary-color);
-            color: white;
-            padding: 40px 0 20px;
-        }
-
-        .form-control {
-            border-radius: 10px;
-            border: 2px solid #e9ecef;
-            padding: 12px 15px;
-        }
-
-        .form-control:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 0.2rem rgba(255, 107, 53, 0.25);
-        }
-
-        .alert {
-            border-radius: 10px;
-            border: none;
-        }
-
-        .navbar {
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-    </style>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    
     {% block extra_css %}{% endblock %}
 </head>
 <body>
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-white">
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
         <div class="container">
-            <a class="navbar-brand" href="{{ url_for('index') }}">
-                <i class="fas fa-utensils me-2"></i>گل سرخ <span class="text-muted">Rose Kitchen</span>
+            <a class="navbar-brand fw-bold text-primary" href="{{ url_for('index') }}">
+                <i class="fas fa-utensils me-2"></i>Chef Marketplace
             </a>
             
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -229,68 +34,47 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('index') }}">Home</a>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="findChefsDropdown" role="button" data-bs-toggle="dropdown">
-                            Find Chefs
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="{{ url_for('browse_cooks') }}">Browse All Chefs</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('chefs_near_me') }}">Chefs Near Me</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('chef_specialties') }}">By Cuisine</a></li>
-                            <li><a class="dropdown-item" href="{{ url_for('search_chefs') }}">Advanced Search</a></li>
-                        </ul>
-                    </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('browse_cooks') }}">Browse Chefs</a>
+                        <a class="nav-link" href="{{ url_for('browse_chefs') }}">Find Chefs</a>
                     </li>
                     {% if current_user.is_authenticated %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('messages') }}">
-                                <i class="fas fa-comments me-1"></i>Messages
-                            </a>
-                        </li>
+                        {% if current_user.role == 'chef' %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('chef_dashboard') }}">Dashboard</a>
+                            </li>
+                        {% elif current_user.role == 'client' %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('client_dashboard') }}">Dashboard</a>
+                            </li>
+                        {% elif current_user.role == 'admin' %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('admin_dashboard') }}">Admin</a>
+                            </li>
+                        {% endif %}
                     {% endif %}
                 </ul>
                 
                 <ul class="navbar-nav">
-                    <!-- Language Switcher -->
-                    <li class="nav-item">
-                        {% include 'components/language_switcher.html' %}
-                    </li>
-                    
-                    <!-- Simple Language Links (Fallback) -->
-                    <li class="nav-item">
-                        <div class="language-links">
-                            <a href="{{ url_for('set_language_route', language='en') }}" class="nav-link {% if get_current_language() == 'en' %}active{% endif %}">🇺🇸</a>
-                            <a href="{{ url_for('set_language_route', language='fa') }}" class="nav-link {% if get_current_language() == 'fa' %}active{% endif %}">🇮🇷</a>
-                        </div>
-                    </li>
-                    
                     {% if current_user.is_authenticated %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('dashboard') }}">
-                                <i class="fas fa-tachometer-alt me-1"></i>{{ get_translated_text('dashboard') }}
-                            </a>
-                        </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                                <i class="fas fa-user me-1"></i>{{ current_user.first_name }}
+                                <i class="fas fa-user-circle me-1"></i>{{ current_user.first_name }}
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="{{ url_for('dashboard') }}">{{ get_translated_text('dashboard') }}</a></li>
-                                {% if current_user.is_cook and not current_user.cook_profile %}
-                                    <li><a class="dropdown-item" href="{{ url_for('create_cook_profile') }}">{{ get_translated_text('create_cook_profile') }}</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                                {% if current_user.role == 'chef' %}
+                                    <li><a class="dropdown-item" href="{{ url_for('chef_profile') }}">Profile</a></li>
                                 {% endif %}
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="{{ url_for('logout') }}">{{ get_translated_text('logout') }}</a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('logout') }}">Logout</a></li>
                             </ul>
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('login') }}">{{ get_translated_text('login') }}</a>
+                            <a class="nav-link" href="{{ url_for('login') }}">Login</a>
                         </li>
                         <li class="nav-item">
-                            <a class="btn btn-outline-primary ms-2" href="{{ url_for('register') }}">{{ get_translated_text('register') }}</a>
+                            <a class="btn btn-primary ms-2" href="{{ url_for('register') }}">Sign Up</a>
                         </li>
                     {% endif %}
                 </ul>
@@ -318,40 +102,66 @@
     </main>
 
     <!-- Footer -->
-    <footer class="footer mt-5">
+    <footer class="bg-dark text-light py-5 mt-5">
         <div class="container">
             <div class="row">
                 <div class="col-md-4">
-                    <h5><i class="fas fa-utensils me-2"></i>گل سرخ Rose Kitchen</h5>
-                    <p>Connecting you with authentic Persian and Iranian chefs for your special events and gatherings. Experience the rich flavors of Iran.</p>
+                    <h5 class="fw-bold mb-3">Chef Marketplace</h5>
+                    <p class="text-muted">Connecting you with professional chefs for unforgettable in-home dining experiences.</p>
                 </div>
-                <div class="col-md-4">
-                    <h5>Quick Links</h5>
+                <div class="col-md-2">
+                    <h6 class="fw-bold mb-3">For Clients</h6>
                     <ul class="list-unstyled">
-                        <li><a href="{{ url_for('index') }}" class="text-light">Home</a></li>
-                        <li><a href="{{ url_for('browse_cooks') }}" class="text-light">Find Cooks</a></li>
-                        {% if current_user.is_authenticated %}
-                            <li><a href="{{ url_for('dashboard') }}" class="text-light">Dashboard</a></li>
-                        {% else %}
-                            <li><a href="{{ url_for('register') }}" class="text-light">Sign Up</a></li>
-                            <li><a href="{{ url_for('login') }}" class="text-light">Login</a></li>
-                        {% endif %}
+                        <li><a href="{{ url_for('browse_chefs') }}" class="text-muted text-decoration-none">Find Chefs</a></li>
+                        <li><a href="#" class="text-muted text-decoration-none">How It Works</a></li>
+                        <li><a href="#" class="text-muted text-decoration-none">Safety</a></li>
                     </ul>
                 </div>
-                <div class="col-md-4">
-                    <h5>Contact</h5>
-                    <p><i class="fas fa-envelope me-2"></i>support@kitchenbook.com</p>
-                    <p><i class="fas fa-phone me-2"></i>+1 (555) 123-4567</p>
+                <div class="col-md-2">
+                    <h6 class="fw-bold mb-3">For Chefs</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="{{ url_for('register') }}" class="text-muted text-decoration-none">Join as Chef</a></li>
+                        <li><a href="#" class="text-muted text-decoration-none">Chef Resources</a></li>
+                        <li><a href="#" class="text-muted text-decoration-none">Support</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2">
+                    <h6 class="fw-bold mb-3">Company</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-muted text-decoration-none">About</a></li>
+                        <li><a href="#" class="text-muted text-decoration-none">Contact</a></li>
+                        <li><a href="#" class="text-muted text-decoration-none">Careers</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2">
+                    <h6 class="fw-bold mb-3">Legal</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-muted text-decoration-none">Privacy Policy</a></li>
+                        <li><a href="#" class="text-muted text-decoration-none">Terms of Service</a></li>
+                        <li><a href="#" class="text-muted text-decoration-none">Cookie Policy</a></li>
+                    </ul>
                 </div>
             </div>
             <hr class="my-4">
-            <div class="text-center">
-                <p>&copy; 2024 گل سرخ Rose Kitchen. All rights reserved. | Experience the Art of Persian Cuisine</p>
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="text-muted mb-0">&copy; 2024 Chef Marketplace. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-end">
+                    <a href="#" class="text-muted me-3"><i class="fab fa-facebook"></i></a>
+                    <a href="#" class="text-muted me-3"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="text-muted me-3"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="text-muted"><i class="fab fa-linkedin"></i></a>
+                </div>
             </div>
         </div>
     </footer>
 
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    
     {% block extra_js %}{% endblock %}
 </body>
 </html>

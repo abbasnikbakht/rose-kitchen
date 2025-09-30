@@ -1,0 +1,337 @@
+{% extends "base.html" %}
+
+{% block title %}Book {{ chef_profile.user.first_name }} {{ chef_profile.user.last_name }} - Chef Marketplace{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ url_for('index') }}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{{ url_for('browse_chefs') }}">Chefs</a></li>
+                    <li class="breadcrumb-item"><a href="{{ url_for('chef_detail', chef_id=chef_profile.id) }}">{{ chef_profile.user.first_name }} {{ chef_profile.user.last_name }}</a></li>
+                    <li class="breadcrumb-item active">Book</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    
+    <div class="row">
+        <!-- Chef Info Sidebar -->
+        <div class="col-lg-4 mb-4">
+            <div class="card sticky-top" style="top: 2rem;">
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        {% if chef_profile.profile_photo %}
+                            <img src="{{ url_for('static', filename='uploads/profiles/' + chef_profile.profile_photo) }}" 
+                                 class="img-fluid rounded-circle mb-3" alt="{{ chef_profile.user.first_name }}" style="width: 100px; height: 100px; object-fit: cover;">
+                        {% else %}
+                            <div class="bg-light rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 100px; height: 100px;">
+                                <i class="fas fa-user fa-2x text-muted"></i>
+                            </div>
+                        {% endif %}
+                        <h5 class="fw-bold">{{ chef_profile.user.first_name }} {{ chef_profile.user.last_name }}</h5>
+                        <div class="stars mb-2">
+                            {% for i in range(5) %}
+                                <i class="fas fa-star {% if i < chef_profile.rating|int %}text-warning{% else %}text-muted{% endif %}"></i>
+                            {% endfor %}
+                            <span class="text-muted ms-2">({{ chef_profile.total_reviews }} reviews)</span>
+                        </div>
+                    </div>
+                    
+                    <div class="chef-details">
+                        <div class="detail-item mb-2">
+                            <i class="fas fa-dollar-sign text-primary me-2"></i>
+                            <strong>From ${{ chef_profile.base_price_per_person }}/person</strong>
+                        </div>
+                        <div class="detail-item mb-2">
+                            <i class="fas fa-users text-primary me-2"></i>
+                            <strong>{{ chef_profile.min_guests }}-{{ chef_profile.max_guests }} guests</strong>
+                        </div>
+                        <div class="detail-item mb-2">
+                            <i class="fas fa-clock text-primary me-2"></i>
+                            <strong>{{ chef_profile.experience_years }} years experience</strong>
+                        </div>
+                        <div class="detail-item mb-2">
+                            <i class="fas fa-map-marker-alt text-primary me-2"></i>
+                            <span>{{ chef_profile.service_areas }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <h6 class="fw-bold">Specialties</h6>
+                        {% if chef_profile.specialties %}
+                            {% set specialties = chef_profile.specialties.split(',') %}
+                            {% for specialty in specialties[:3] %}
+                                <span class="badge bg-primary me-1 mb-1">{{ specialty.strip() }}</span>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Booking Form -->
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="fw-bold mb-4">Book Your Experience</h3>
+                    
+                    <form method="POST" id="bookingForm">
+                        {{ form.hidden_tag() }}
+                        
+                        <!-- Event Details -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                {{ form.event_date.label(class="form-label") }}
+                                {{ form.event_date(class="form-control" + (" is-invalid" if form.event_date.errors else "")) }}
+                                {% if form.event_date.errors %}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.event_date.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-6">
+                                {{ form.event_time.label(class="form-label") }}
+                                {{ form.event_time(class="form-control" + (" is-invalid" if form.event_time.errors else "")) }}
+                                {% if form.event_time.errors %}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.event_time.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <!-- Guest Count -->
+                        <div class="mb-4">
+                            {{ form.guest_count.label(class="form-label") }}
+                            {{ form.guest_count(class="form-control" + (" is-invalid" if form.guest_count.errors else ""), min=chef_profile.min_guests, max=chef_profile.max_guests) }}
+                            {% if form.guest_count.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.guest_count.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <small class="text-muted">Minimum: {{ chef_profile.min_guests }} guests, Maximum: {{ chef_profile.max_guests }} guests</small>
+                        </div>
+                        
+                        <!-- Location -->
+                        <div class="mb-4">
+                            {{ form.location_address.label(class="form-label") }}
+                            {{ form.location_address(class="form-control" + (" is-invalid" if form.location_address.errors else ""), rows="3") }}
+                            {% if form.location_address.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.location_address.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <small class="text-muted">Please provide the complete address where the chef will cook</small>
+                        </div>
+                        
+                        <!-- Occasion Type -->
+                        <div class="mb-4">
+                            {{ form.occasion_type.label(class="form-label") }}
+                            {{ form.occasion_type(class="form-select" + (" is-invalid" if form.occasion_type.errors else "")) }}
+                            {% if form.occasion_type.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.occasion_type.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Dietary Restrictions -->
+                        <div class="mb-4">
+                            {{ form.dietary_restrictions.label(class="form-label") }}
+                            {{ form.dietary_restrictions(class="form-control" + (" is-invalid" if form.dietary_restrictions.errors else ""), rows="3") }}
+                            {% if form.dietary_restrictions.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.dietary_restrictions.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <small class="text-muted">Please list any allergies, dietary restrictions, or preferences</small>
+                        </div>
+                        
+                        <!-- Special Requests -->
+                        <div class="mb-4">
+                            {{ form.special_requests.label(class="form-label") }}
+                            {{ form.special_requests(class="form-control" + (" is-invalid" if form.special_requests.errors else ""), rows="3") }}
+                            {% if form.special_requests.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.special_requests.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <small class="text-muted">Any special requests or preferences for your dining experience</small>
+                        </div>
+                        
+                        <!-- Price Breakdown -->
+                        <div class="card bg-light mb-4">
+                            <div class="card-body">
+                                <h6 class="fw-bold mb-3">Price Breakdown</h6>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <small class="text-muted">Base Price:</small>
+                                    </div>
+                                    <div class="col-6 text-end">
+                                        <small id="basePrice">${{ chef_profile.base_price_per_person }}</small>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <small class="text-muted">Travel Fee:</small>
+                                    </div>
+                                    <div class="col-6 text-end">
+                                        <small id="travelFee">${{ chef_profile.travel_fee or 0 }}</small>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <small class="text-muted">Service Fee (10%):</small>
+                                    </div>
+                                    <div class="col-6 text-end">
+                                        <small id="serviceFee">$0.00</small>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <small class="text-muted">Platform Fee (15%):</small>
+                                    </div>
+                                    <div class="col-6 text-end">
+                                        <small id="platformFee">$0.00</small>
+                                    </div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <strong>Total:</strong>
+                                    </div>
+                                    <div class="col-6 text-end">
+                                        <strong id="totalPrice">$0.00</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Submit Button -->
+                        <div class="d-grid">
+                            {{ form.submit(class="btn btn-primary btn-lg") }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.sticky-top {
+    position: sticky;
+    top: 2rem;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+.stars i {
+    font-size: 0.9rem;
+}
+
+.breadcrumb {
+    background: none;
+    padding: 0;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+    content: ">";
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const guestCountInput = document.getElementById('guest_count');
+    const basePrice = {{ chef_profile.base_price_per_person }};
+    const travelFee = {{ chef_profile.travel_fee or 0 }};
+    
+    function updatePrice() {
+        const guestCount = parseInt(guestCountInput.value) || 0;
+        const subtotal = basePrice * guestCount;
+        const serviceFee = subtotal * 0.1;
+        const platformFee = subtotal * 0.15;
+        const total = subtotal + travelFee + serviceFee + platformFee;
+        
+        document.getElementById('basePrice').textContent = '$' + subtotal.toFixed(2);
+        document.getElementById('serviceFee').textContent = '$' + serviceFee.toFixed(2);
+        document.getElementById('platformFee').textContent = '$' + platformFee.toFixed(2);
+        document.getElementById('totalPrice').textContent = '$' + total.toFixed(2);
+    }
+    
+    guestCountInput.addEventListener('input', updatePrice);
+    
+    // Set minimum date to today
+    const dateInput = document.getElementById('event_date');
+    dateInput.min = new Date().toISOString().split('T')[0];
+    
+    // Set maximum date to 1 year from now
+    const maxDate = new Date();
+    maxDate.setFullYear(maxDate.getFullYear() + 1);
+    dateInput.max = maxDate.toISOString().split('T')[0];
+    
+    // Initial price calculation
+    updatePrice();
+    
+    // Form validation
+    const form = document.getElementById('bookingForm');
+    form.addEventListener('submit', function(e) {
+        const guestCount = parseInt(guestCountInput.value);
+        const minGuests = {{ chef_profile.min_guests }};
+        const maxGuests = {{ chef_profile.max_guests }};
+        
+        if (guestCount < minGuests || guestCount > maxGuests) {
+            e.preventDefault();
+            showNotification(`Guest count must be between ${minGuests} and ${maxGuests}`, 'error');
+            return false;
+        }
+        
+        const eventDate = new Date(document.getElementById('event_date').value);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        
+        if (eventDate < today) {
+            e.preventDefault();
+            showNotification('Event date cannot be in the past', 'error');
+            return false;
+        }
+    });
+});
+</script>
+{% endblock %}

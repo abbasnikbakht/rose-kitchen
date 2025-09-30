@@ -1,45 +1,56 @@
-# گل سرخ Rose Kitchen - Authentic Persian Home Cooking Service
+# 🍳 Chef Marketplace Platform
 
-A comprehensive web application that connects customers with authentic Persian and Iranian chefs for home cooking services. Experience the rich flavors of Iran, from traditional Tehran dishes to Isfahan specialties and Shiraz cuisine. Perfect for parties, family gatherings, corporate events, and special occasions.
+A comprehensive marketplace platform that connects clients with professional chefs for in-home cooking services. Built with Flask, this platform provides a seamless experience for booking personalized culinary experiences.
 
-## Features
+## ✨ Features
 
-### For Customers
-- **Browse Authentic Persian Chefs**: Search through a network of experienced Iranian chefs
-- **Easy Booking System**: Simple booking process with date/time selection
-- **Event Types**: Support for parties, family gatherings, corporate events, birthdays, anniversaries, and more
-- **Special Requests**: Custom dietary requirements and traditional Persian menu preferences
-- **Rating & Reviews**: Rate and review Persian chefs after service
-- **Dashboard**: Manage all your bookings in one place
+### For Clients
+- **Browse & Search Chefs**: Find professional chefs by cuisine, location, rating, and price
+- **Detailed Chef Profiles**: View chef backgrounds, specialties, certifications, and sample menus
+- **Easy Booking System**: Simple booking flow with date/time selection and customization
+- **Secure Payments**: Integrated Stripe payment processing
+- **Real-time Messaging**: Direct communication with chefs
+- **Review System**: Rate and review your dining experiences
+- **Dashboard**: Manage bookings, view history, and track favorites
 
-### For Persian Chefs
-- **Professional Profiles**: Create detailed profiles showcasing Iranian cuisine specialties and experience
-- **Booking Management**: Accept, confirm, and manage customer bookings
-- **Earnings Tracking**: Monitor your income and completed jobs
-- **Availability Management**: Control your service availability
-- **Customer Reviews**: Build reputation through customer feedback
+### For Chefs
+- **Professional Profiles**: Create detailed profiles with photos, bio, and specialties
+- **Menu Management**: Showcase sample menus and pricing
+- **Booking Management**: Accept/decline requests and manage calendar
+- **Earnings Tracking**: Monitor income and payout schedules
+- **Client Communication**: Direct messaging with clients
+- **Performance Analytics**: Track ratings and reviews
 
-## Technology Stack
+### For Admins
+- **User Management**: Oversee all users, chefs, and bookings
+- **Platform Analytics**: Monitor platform performance and revenue
+- **Content Moderation**: Manage reviews and user-generated content
+- **Support Tools**: Handle disputes and customer service
 
-- **Backend**: Python Flask
-- **Database**: SQLite (easily upgradeable to PostgreSQL/MySQL)
-- **Frontend**: Bootstrap 5, HTML5, CSS3, JavaScript
-- **Authentication**: Flask-Login
-- **Forms**: Flask-WTF with WTForms
-- **Styling**: Custom CSS with Bootstrap components
+## 🚀 Quick Start
 
-## Installation & Setup
+### Prerequisites
+- Python 3.8+
+- pip (Python package installer)
+- Git
+
+### Installation
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
-   cd Kitchen
+   git clone https://github.com/yourusername/chef-marketplace.git
+   cd chef-marketplace
    ```
 
 2. **Create a virtual environment**
    ```bash
    python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   
+   # On Windows
+   venv\Scripts\activate
+   
+   # On macOS/Linux
+   source venv/bin/activate
    ```
 
 3. **Install dependencies**
@@ -50,146 +61,191 @@ A comprehensive web application that connects customers with authentic Persian a
 4. **Set up environment variables**
    ```bash
    cp env_example.txt .env
-   # Edit .env file with your configuration
+   # Edit .env with your configuration
    ```
 
-5. **Run the application**
+5. **Initialize the database**
    ```bash
    python app.py
    ```
 
-6. **Access the application**
-   Open your browser and go to `http://localhost:5000`
+6. **Run the application**
+   ```bash
+   python app.py
+   ```
 
-## Database Schema
+The application will be available at `http://localhost:5000`
 
-### Users Table
-- User authentication and basic information
-- Support for both customers and cooks
-- Contact information and address
+## 🔧 Configuration
 
-### Cook Profiles Table
-- Professional cook information
-- Specialties, experience, and hourly rates
-- Service radius and availability status
+### Environment Variables
 
-### Bookings Table
-- Event details and scheduling
-- Customer-cook relationships
-- Booking status and cost calculation
+Create a `.env` file based on `env_example.txt`:
 
-### Reviews Table
-- Customer feedback and ratings
-- Review comments and timestamps
-
-## Key Features Implementation
-
-### Authentication System
-- User registration with role selection (Customer/Cook)
-- Secure login with password hashing
-- Session management with Flask-Login
-
-### Booking System
-- Date and time selection
-- Cost calculation based on duration and hourly rate
-- Status management (pending, confirmed, completed, cancelled)
-
-### Review System
-- 5-star rating system
-- Written reviews and comments
-- Review display on cook profiles
-
-### Dashboard Features
-- Different dashboards for customers and cooks
-- Booking management and status updates
-- Statistics and earnings tracking
-
-## Future Enhancements
-
-- **Payment Integration**: Stripe payment processing
-- **Email Notifications**: Booking confirmations and updates
-- **Advanced Search**: Filter by cuisine, price range, availability
-- **Calendar Integration**: Google Calendar sync
-- **Mobile App**: React Native or Flutter mobile application
-- **Real-time Chat**: Customer-cook communication
-- **Photo Gallery**: Cook portfolio and food photos
-- **Advanced Analytics**: Detailed performance metrics
-
-## API Endpoints
-
-### Authentication
-- `GET /login` - Login page
-- `POST /login` - User login
-- `GET /register` - Registration page
-- `POST /register` - User registration
-- `GET /logout` - User logout
-
-### Cook Management
-- `GET /cooks` - Browse all cooks
-- `GET /cook/<id>` - View cook profile
-- `GET /create-cook-profile` - Create cook profile
-- `POST /create-cook-profile` - Submit cook profile
-
-### Booking System
-- `GET /book/<cook_id>` - Book a cook
-- `POST /book/<cook_id>` - Submit booking
-- `POST /booking/<id>/update-status` - Update booking status
-- `GET /booking/<id>/review` - Review booking
-- `POST /booking/<id>/review` - Submit review
-
-### Dashboard
-- `GET /dashboard` - User dashboard (role-based)
-
-## Security Features
-
-- Password hashing with Werkzeug
-- CSRF protection with Flask-WTF
-- Input validation and sanitization
-- SQL injection prevention with SQLAlchemy ORM
-- Session management and user authentication
-
-## Deployment
-
-### Local Development
 ```bash
-python app.py
+# Flask Configuration
+SECRET_KEY=your-super-secret-key-here
+FLASK_ENV=development
+FLASK_DEBUG=True
+
+# Database Configuration
+DATABASE_URL=sqlite:///chef_marketplace.db
+
+# Stripe Configuration (Required for payments)
+STRIPE_PUBLISHABLE_KEY=pk_test_your_stripe_publishable_key
+STRIPE_SECRET_KEY=sk_test_your_stripe_secret_key
+
+# Email Configuration (Optional)
+MAIL_SERVER=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USE_TLS=True
+MAIL_USERNAME=your-email@gmail.com
+MAIL_PASSWORD=your-app-password
 ```
 
-### Production Deployment
-1. Set up a production database (PostgreSQL recommended)
-2. Configure environment variables
-3. Use a WSGI server like Gunicorn
-4. Set up reverse proxy with Nginx
-5. Enable HTTPS with SSL certificates
+### Database Setup
 
-## Contributing
+The application uses SQLite by default for development. For production, configure PostgreSQL:
+
+```bash
+DATABASE_URL=postgresql://username:password@localhost/chef_marketplace
+```
+
+## 📱 User Roles
+
+### Client
+- Browse and search for chefs
+- Book cooking services
+- Rate and review experiences
+- Manage bookings and favorites
+
+### Chef
+- Create and manage professional profile
+- Set availability and pricing
+- Accept/decline booking requests
+- Communicate with clients
+- Track earnings and performance
+
+### Admin
+- Manage all users and content
+- Monitor platform performance
+- Handle support requests
+- Configure platform settings
+
+## 🎨 Design Features
+
+- **Responsive Design**: Mobile-first approach with Bootstrap 5
+- **Modern UI**: Clean, professional interface with food-centric design
+- **Interactive Elements**: Smooth animations and hover effects
+- **Accessibility**: WCAG compliant with proper contrast and navigation
+- **Performance**: Optimized images and lazy loading
+
+## 💳 Payment Integration
+
+The platform integrates with Stripe for secure payment processing:
+
+- **Secure Payments**: PCI-compliant payment processing
+- **Multiple Payment Methods**: Credit cards, digital wallets
+- **Automatic Payouts**: Scheduled payments to chefs
+- **Refund Management**: Easy refund processing
+- **Fee Calculation**: Automatic platform and service fee calculation
+
+## 🔒 Security Features
+
+- **User Authentication**: Secure login with password hashing
+- **Role-based Access**: Different permissions for clients, chefs, and admins
+- **Data Validation**: Server-side validation for all forms
+- **File Upload Security**: Secure image upload with validation
+- **CSRF Protection**: Cross-site request forgery protection
+- **SQL Injection Prevention**: Parameterized queries
+
+## 📊 Database Schema
+
+### Core Tables
+- **Users**: Client, chef, and admin accounts
+- **ChefProfiles**: Detailed chef information and settings
+- **Bookings**: Service bookings and scheduling
+- **Reviews**: Client ratings and feedback
+- **Messages**: Communication between users
+- **Menus**: Chef menu offerings and pricing
+
+## 🚀 Deployment
+
+### Render (Recommended)
+1. Push code to GitHub
+2. Connect repository to Render
+3. Set environment variables
+4. Deploy automatically
+
+### Heroku
+1. Install Heroku CLI
+2. Create Heroku app
+3. Set environment variables
+4. Deploy with Git
+
+### Docker
+```bash
+docker build -t chef-marketplace .
+docker run -p 5000:5000 chef-marketplace
+```
+
+## 🧪 Testing
+
+Run the test suite:
+```bash
+python -m pytest tests/
+```
+
+## 📈 Performance Optimization
+
+- **Image Optimization**: Automatic resizing and compression
+- **Database Indexing**: Optimized queries for large datasets
+- **Caching**: Redis integration for frequently accessed data
+- **CDN Ready**: Static asset optimization for global delivery
+
+## 🤝 Contributing
 
 1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-## License
+## 📝 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Support
+## 🆘 Support
 
-For support and questions, please contact:
-- Email: support@kitchenbook.com
-- Phone: +1 (555) 123-4567
+For support, email support@chefmarketplace.com or join our Slack channel.
 
-## Screenshots
+## 🗺️ Roadmap
 
-The application features a modern, responsive design with:
-- Clean, professional interface
-- Mobile-friendly responsive layout
-- Intuitive navigation and user experience
-- Beautiful cook profile cards
-- Comprehensive booking management
-- Real-time status updates
+### Phase 1 (Current)
+- ✅ Core booking system
+- ✅ User authentication
+- ✅ Basic payment integration
+- ✅ Review system
+
+### Phase 2 (Next)
+- 🔄 Advanced search and filtering
+- 🔄 Mobile app (React Native)
+- 🔄 Real-time notifications
+- 🔄 Advanced analytics
+
+### Phase 3 (Future)
+- 📅 AI-powered chef recommendations
+- 📅 Video call integration
+- 📅 Multi-language support
+- 📅 Corporate accounts
+
+## 🙏 Acknowledgments
+
+- Bootstrap for the responsive framework
+- Font Awesome for icons
+- Stripe for payment processing
+- Flask community for excellent documentation
 
 ---
 
-**KitchenBook** - Bringing professional cooking services to your home! 🍳✨
+**Built with ❤️ for food lovers everywhere**

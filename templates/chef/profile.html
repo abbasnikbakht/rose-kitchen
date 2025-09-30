@@ -1,0 +1,304 @@
+{% extends "base.html" %}
+
+{% block title %}Chef Profile - Chef Marketplace{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="fw-bold">Chef Profile</h1>
+                <a href="{{ url_for('chef_dashboard') }}" class="btn btn-outline-primary">
+                    <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <form method="POST" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        
+        <div class="row">
+            <!-- Profile Photos -->
+            <div class="col-lg-4 mb-4">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <h5 class="fw-bold mb-3">Profile Photos</h5>
+                        
+                        <!-- Profile Photo -->
+                        <div class="mb-4">
+                            <label class="form-label">Profile Photo</label>
+                            {% if chef_profile and chef_profile.profile_photo %}
+                                <div class="mb-3">
+                                    <img src="{{ url_for('static', filename='uploads/profiles/' + chef_profile.profile_photo) }}" 
+                                         class="img-fluid rounded shadow" alt="Profile Photo" style="max-height: 200px;">
+                                </div>
+                            {% endif %}
+                            {{ form.profile_photo(class="form-control") }}
+                            <small class="text-muted">Recommended: 400x400px, JPG or PNG</small>
+                        </div>
+                        
+                        <!-- Cover Photo -->
+                        <div class="mb-4">
+                            <label class="form-label">Cover Photo</label>
+                            {% if chef_profile and chef_profile.cover_photo %}
+                                <div class="mb-3">
+                                    <img src="{{ url_for('static', filename='uploads/profiles/' + chef_profile.cover_photo) }}" 
+                                         class="img-fluid rounded shadow" alt="Cover Photo" style="max-height: 150px;">
+                                </div>
+                            {% endif %}
+                            {{ form.cover_photo(class="form-control") }}
+                            <small class="text-muted">Recommended: 1200x400px, JPG or PNG</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Profile Information -->
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="fw-bold mb-4">Profile Information</h5>
+                        
+                        <!-- Bio -->
+                        <div class="mb-4">
+                            {{ form.bio.label(class="form-label") }}
+                            {{ form.bio(class="form-control" + (" is-invalid" if form.bio.errors else ""), rows="4") }}
+                            {% if form.bio.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.bio.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <small class="text-muted">Tell clients about your culinary background, experience, and what makes you unique (50-1000 characters)</small>
+                        </div>
+                        
+                        <!-- Specialties -->
+                        <div class="mb-4">
+                            {{ form.specialties.label(class="form-label") }}
+                            {{ form.specialties(class="form-control" + (" is-invalid" if form.specialties.errors else "")) }}
+                            {% if form.specialties.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.specialties.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <small class="text-muted">Comma-separated list of cuisines and cooking styles (e.g., Italian, French, BBQ, Vegan)</small>
+                        </div>
+                        
+                        <!-- Experience -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                {{ form.experience_years.label(class="form-label") }}
+                                {{ form.experience_years(class="form-control" + (" is-invalid" if form.experience_years.errors else "")) }}
+                                {% if form.experience_years.errors %}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.experience_years.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <!-- Certifications -->
+                        <div class="mb-4">
+                            {{ form.certifications.label(class="form-label") }}
+                            {{ form.certifications(class="form-control" + (" is-invalid" if form.certifications.errors else "")) }}
+                            {% if form.certifications.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.certifications.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <small class="text-muted">Comma-separated list of certifications (e.g., ServSafe, Culinary School Diploma)</small>
+                        </div>
+                        
+                        <!-- Service Areas -->
+                        <div class="mb-4">
+                            {{ form.service_areas.label(class="form-label") }}
+                            {{ form.service_areas(class="form-control" + (" is-invalid" if form.service_areas.errors else "")) }}
+                            {% if form.service_areas.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.service_areas.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <small class="text-muted">Comma-separated list of areas you serve (e.g., Manhattan, Brooklyn, Queens)</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Pricing Information -->
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <h5 class="fw-bold mb-4">Pricing & Availability</h5>
+                        
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                {{ form.base_price_per_person.label(class="form-label") }}
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    {{ form.base_price_per_person(class="form-control" + (" is-invalid" if form.base_price_per_person.errors else "")) }}
+                                </div>
+                                {% if form.base_price_per_person.errors %}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.base_price_per_person.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <small class="text-muted">Base price per person for your services</small>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                {{ form.travel_fee.label(class="form-label") }}
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    {{ form.travel_fee(class="form-control" + (" is-invalid" if form.travel_fee.errors else "")) }}
+                                </div>
+                                {% if form.travel_fee.errors %}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.travel_fee.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <small class="text-muted">Additional travel fee (optional)</small>
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                {{ form.min_guests.label(class="form-label") }}
+                                {{ form.min_guests(class="form-control" + (" is-invalid" if form.min_guests.errors else "")) }}
+                                {% if form.min_guests.errors %}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.min_guests.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="col-md-6">
+                                {{ form.max_guests.label(class="form-label") }}
+                                {{ form.max_guests(class="form-control" + (" is-invalid" if form.max_guests.errors else "")) }}
+                                {% if form.max_guests.errors %}
+                                    <div class="invalid-feedback">
+                                        {% for error in form.max_guests.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Submit Button -->
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                    <a href="{{ url_for('chef_dashboard') }}" class="btn btn-outline-secondary me-md-2">Cancel</a>
+                    {{ form.submit(class="btn btn-primary") }}
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.card {
+    border: none;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+.input-group-text {
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Image preview functionality
+document.querySelectorAll('input[type="file"]').forEach(input => {
+    input.addEventListener('change', function() {
+        const file = this.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                // Create or update preview image
+                let preview = this.parentNode.querySelector('.preview-image');
+                if (!preview) {
+                    preview = document.createElement('img');
+                    preview.className = 'preview-image img-fluid rounded shadow mt-2';
+                    preview.style.maxHeight = '200px';
+                    this.parentNode.appendChild(preview);
+                }
+                preview.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+});
+
+// Character counter for bio
+const bioTextarea = document.querySelector('textarea[name="bio"]');
+if (bioTextarea) {
+    const counter = document.createElement('small');
+    counter.className = 'text-muted';
+    counter.style.display = 'block';
+    counter.style.marginTop = '0.25rem';
+    bioTextarea.parentNode.appendChild(counter);
+    
+    function updateCounter() {
+        const length = bioTextarea.value.length;
+        counter.textContent = `${length}/1000 characters`;
+        if (length > 1000) {
+            counter.className = 'text-danger';
+        } else if (length > 800) {
+            counter.className = 'text-warning';
+        } else {
+            counter.className = 'text-muted';
+        }
+    }
+    
+    bioTextarea.addEventListener('input', updateCounter);
+    updateCounter();
+}
+
+// Form validation
+const form = document.querySelector('form');
+form.addEventListener('submit', function(e) {
+    const bio = document.querySelector('textarea[name="bio"]').value;
+    if (bio.length < 50) {
+        e.preventDefault();
+        showNotification('Bio must be at least 50 characters long', 'error');
+        return false;
+    }
+    
+    if (bio.length > 1000) {
+        e.preventDefault();
+        showNotification('Bio must be less than 1000 characters', 'error');
+        return false;
+    }
+});
+</script>
+{% endblock %}

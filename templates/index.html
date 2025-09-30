@@ -1,50 +1,23 @@
 {% extends "base.html" %}
 
-{% block title %}Home - گل سرخ Rose Kitchen{% endblock %}
+{% block title %}Chef Marketplace - Professional In-Home Cooking Services{% endblock %}
 
 {% block content %}
 <!-- Hero Section -->
-<section class="hero-section">
+<section class="hero-section bg-gradient-primary text-white py-5">
     <div class="container">
-        <div class="row align-items-center">
+        <div class="row align-items-center min-vh-50">
             <div class="col-lg-6">
-                <h1 class="display-4 fw-bold mb-4">{{ get_translated_text('welcome_message') }}</h1>
-                <p class="lead mb-4">{{ get_translated_text('tagline') }}</p>
-                <div class="d-flex gap-3 mb-4">
-                    <a href="{{ url_for('browse_cooks') }}" class="btn btn-light btn-lg">
-                        <i class="fas fa-search me-2"></i>{{ get_translated_text('cooks') }}
-                    </a>
-                    {% if not current_user.is_authenticated %}
-                        <a href="{{ url_for('register') }}" class="btn btn-outline-light btn-lg">
-                            <i class="fas fa-user-plus me-2"></i>{{ get_translated_text('register') }}
-                        </a>
-                    {% endif %}
-                </div>
-                
-                <!-- Language Switcher in Hero -->
-                <div class="hero-language-switcher">
-                    <p class="text-white-50 mb-2">{{ get_translated_text('language') }}:</p>
-                    <div class="d-flex gap-2">
-                        <a href="{{ url_for('set_language_route', language='en') }}" 
-                           class="btn btn-sm {% if get_current_language() == 'en' %}btn-light{% else %}btn-outline-light{% endif %}">
-                            🇺🇸 English
-                        </a>
-                        <a href="{{ url_for('set_language_route', language='fa') }}" 
-                           class="btn btn-sm {% if get_current_language() == 'fa' %}btn-light{% else %}btn-outline-light{% endif %}">
-                            🇮🇷 فارسی
-                        </a>
-                    </div>
+                <h1 class="display-4 fw-bold mb-4">Professional Chefs at Your Door</h1>
+                <p class="lead mb-4">Experience restaurant-quality dining in the comfort of your home. Connect with skilled chefs who bring culinary excellence to your kitchen.</p>
+                <div class="d-flex gap-3">
+                    <a href="{{ url_for('browse_chefs') }}" class="btn btn-light btn-lg">Find a Chef</a>
+                    <a href="{{ url_for('register') }}" class="btn btn-outline-light btn-lg">Join as Chef</a>
                 </div>
             </div>
             <div class="col-lg-6">
-                <div class="text-center">
-                    <i class="fas fa-utensils" style="font-size: 200px; opacity: 0.3;"></i>
-                    <div class="mt-3">
-                        <span class="badge bg-light text-dark fs-6 me-2">{{ get_translated_text('isfahan') }}</span>
-                        <span class="badge bg-light text-dark fs-6 me-2">{{ get_translated_text('tehran') }}</span>
-                        <span class="badge bg-light text-dark fs-6 me-2">{{ get_translated_text('shiraz') }}</span>
-                        <span class="badge bg-light text-dark fs-6">{{ get_translated_text('halal_cuisine') }}</span>
-                    </div>
+                <div class="hero-image text-center">
+                    <i class="fas fa-utensils display-1 opacity-75"></i>
                 </div>
             </div>
         </div>
@@ -55,215 +28,231 @@
 <section class="py-5">
     <div class="container">
         <div class="row text-center mb-5">
-            <div class="col-12">
-                <h2 class="display-5 fw-bold">{{ get_translated_text('app_title') }}</h2>
-                <p class="lead text-muted">{{ get_translated_text('tagline') }}</p>
+            <div class="col-lg-8 mx-auto">
+                <h2 class="display-5 fw-bold mb-3">Why Choose Chef Marketplace?</h2>
+                <p class="lead text-muted">We make it easy to bring professional culinary experiences to your home</p>
             </div>
         </div>
         
         <div class="row g-4">
             <div class="col-md-4">
-                <div class="text-center">
-                    <div class="feature-icon">
-                        <i class="fas fa-star"></i>
+                <div class="feature-card text-center p-4 h-100">
+                    <div class="feature-icon bg-primary text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                        <i class="fas fa-star fa-2x"></i>
                     </div>
-                    <h4>{{ get_translated_text('authentic_persian_chefs') }}</h4>
-                    <p class="text-muted">{{ get_translated_text('authentic_persian_chefs_desc') }}</p>
+                    <h4 class="fw-bold mb-3">Verified Chefs</h4>
+                    <p class="text-muted">All our chefs are professionally verified with background checks, certifications, and proven experience.</p>
                 </div>
             </div>
+            
             <div class="col-md-4">
-                <div class="text-center">
-                    <div class="feature-icon">
-                        <i class="fas fa-home"></i>
+                <div class="feature-card text-center p-4 h-100">
+                    <div class="feature-icon bg-success text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                        <i class="fas fa-shield-alt fa-2x"></i>
                     </div>
-                    <h4>{{ get_translated_text('traditional_persian_experience') }}</h4>
-                    <p class="text-muted">{{ get_translated_text('traditional_persian_experience_desc') }}</p>
+                    <h4 class="fw-bold mb-3">Safe & Secure</h4>
+                    <p class="text-muted">Secure payments, insurance coverage, and safety protocols ensure peace of mind for every booking.</p>
                 </div>
             </div>
+            
             <div class="col-md-4">
-                <div class="text-center">
-                    <div class="feature-icon">
-                        <i class="fas fa-calendar-check"></i>
+                <div class="feature-card text-center p-4 h-100">
+                    <div class="feature-icon bg-warning text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                        <i class="fas fa-heart fa-2x"></i>
                     </div>
-                    <h4>{{ get_translated_text('easy_booking') }}</h4>
-                    <p class="text-muted">{{ get_translated_text('easy_booking_desc') }}</p>
+                    <h4 class="fw-bold mb-3">Personalized Experience</h4>
+                    <p class="text-muted">Custom menus, dietary accommodations, and personalized service tailored to your preferences.</p>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Featured Cooks Section -->
-{% if featured_cooks %}
-<section class="py-5 bg-white">
+<!-- Featured Chefs Section -->
+{% if featured_chefs %}
+<section class="py-5 bg-light">
     <div class="container">
         <div class="row mb-5">
-            <div class="col-12 text-center">
-                <h2 class="display-5 fw-bold">{{ get_translated_text('featured_chefs') }}</h2>
-                <p class="lead text-muted">{{ get_translated_text('featured_chefs_desc') }}</p>
+            <div class="col-lg-8 mx-auto text-center">
+                <h2 class="display-5 fw-bold mb-3">Featured Chefs</h2>
+                <p class="lead text-muted">Meet some of our top-rated professional chefs</p>
             </div>
         </div>
         
         <div class="row g-4">
-            {% for cook in featured_cooks %}
+            {% for chef in featured_chefs %}
             <div class="col-lg-4 col-md-6">
-                <div class="card cook-card h-100">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
-                                <i class="fas fa-user text-white"></i>
-                            </div>
-                            <div>
-                                <h5 class="card-title mb-0">{{ cook.cook.first_name }} {{ cook.cook.last_name }}</h5>
-                                <small class="text-muted">{{ cook.experience_years }} {{ get_translated_text('years_experience') }}</small>
+                <div class="chef-card card h-100 shadow-sm">
+                    {% if chef.profile_photo %}
+                        <img src="{{ url_for('static', filename='uploads/profiles/' + chef.profile_photo) }}" class="card-img-top" alt="{{ chef.user.first_name }} {{ chef.user.last_name }}" style="height: 250px; object-fit: cover;">
+                    {% else %}
+                        <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 250px;">
+                            <i class="fas fa-user fa-4x text-muted"></i>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title fw-bold">{{ chef.user.first_name }} {{ chef.user.last_name }}</h5>
+                        <p class="card-text text-muted flex-grow-1">{{ chef.bio[:100] }}{% if chef.bio|length > 100 %}...{% endif %}</p>
+                        
+                        <div class="chef-rating mb-3">
+                            <div class="d-flex align-items-center">
+                                <div class="stars me-2">
+                                    {% for i in range(5) %}
+                                        <i class="fas fa-star {% if i < chef.rating|int %}text-warning{% else %}text-muted{% endif %}"></i>
+                                    {% endfor %}
+                                </div>
+                                <span class="text-muted">({{ chef.total_reviews }} reviews)</span>
                             </div>
                         </div>
                         
-                        <p class="card-text text-muted">{{ cook.bio[:100] }}{% if cook.bio|length > 100 %}...{% endif %}</p>
-                        
-                        <div class="mb-3">
-                            <strong>Specialties:</strong>
-                            <div class="mt-1">
-                                {% for specialty in cook.specialties.split('\n')[:3] %}
-                                    <span class="badge bg-light text-dark me-1">{{ specialty.strip() }}</span>
-                                {% endfor %}
-                            </div>
+                        <div class="chef-details mb-3">
+                            <small class="text-muted">
+                                <i class="fas fa-map-marker-alt me-1"></i>{{ chef.service_areas[:30] }}...
+                                <br>
+                                <i class="fas fa-dollar-sign me-1"></i>From ${{ chef.base_price_per_person }}/person
+                            </small>
                         </div>
                         
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <span class="h5 text-primary">${{ "%.2f"|format(cook.hourly_rate) }}</span>
-                                <small class="text-muted">/hour</small>
-                            </div>
-                            <a href="{{ url_for('cook_profile', cook_id=cook.id) }}" class="btn btn-primary btn-sm">
-                                {{ get_translated_text('view_profile') }}
-                            </a>
-                        </div>
+                        <a href="{{ url_for('chef_detail', chef_id=chef.id) }}" class="btn btn-primary">View Profile</a>
                     </div>
                 </div>
             </div>
             {% endfor %}
         </div>
         
-        <div class="text-center mt-4">
-            <a href="{{ url_for('browse_cooks') }}" class="btn btn-outline-primary btn-lg">
-                {{ get_translated_text('view_all_chefs') }} <i class="fas fa-arrow-right ms-2"></i>
-            </a>
+        <div class="text-center mt-5">
+            <a href="{{ url_for('browse_chefs') }}" class="btn btn-outline-primary btn-lg">View All Chefs</a>
         </div>
     </div>
 </section>
 {% endif %}
 
-<!-- Platform Statistics - Inspired by Preply -->
-{% if stats %}
-<section class="py-5 bg-light">
-    <div class="container">
-        <div class="row text-center mb-5">
-            <div class="col-12">
-                <h2 class="display-5 fw-bold">Join Our Growing Community</h2>
-                <p class="lead text-muted">Experience the best in-home culinary services</p>
-            </div>
-        </div>
-        
-        <div class="row g-4 text-center">
-            <div class="col-md-3">
-                <div class="h2 text-primary fw-bold">{{ stats.total_chefs }}+</div>
-                <p class="text-muted">Professional Chefs</p>
-            </div>
-            <div class="col-md-3">
-                <div class="h2 text-success fw-bold">{{ stats.total_bookings }}+</div>
-                <p class="text-muted">Successful Bookings</p>
-            </div>
-            <div class="col-md-3">
-                <div class="h2 text-warning fw-bold">{{ stats.total_reviews }}+</div>
-                <p class="text-muted">5-Star Reviews</p>
-            </div>
-            <div class="col-md-3">
-                <div class="h2 text-info fw-bold">{{ stats.avg_rating }}</div>
-                <p class="text-muted">Average Rating</p>
-            </div>
-        </div>
-    </div>
-</section>
-{% endif %}
-
-<!-- How It Works Section - Preply Style -->
+<!-- How It Works Section -->
 <section class="py-5">
     <div class="container">
         <div class="row text-center mb-5">
-            <div class="col-12">
-                <h2 class="display-5 fw-bold">How It Works</h2>
-                <p class="lead text-muted">Get started in just 3 simple steps</p>
+            <div class="col-lg-8 mx-auto">
+                <h2 class="display-5 fw-bold mb-3">How It Works</h2>
+                <p class="lead text-muted">Getting started is simple and straightforward</p>
             </div>
         </div>
         
         <div class="row g-4">
             <div class="col-md-4">
-                <div class="text-center">
-                    <div class="feature-icon bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 80px; height: 80px;">
-                        <span class="fw-bold fs-3">1</span>
-                    </div>
-                    <h4>Find Your Chef</h4>
-                    <p class="text-muted">Browse our network of professional chefs, read reviews, and find the perfect match for your culinary needs.</p>
+                <div class="step-card text-center">
+                    <div class="step-number bg-primary text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center fw-bold" style="width: 60px; height: 60px;">1</div>
+                    <h4 class="fw-bold mb-3">Browse & Choose</h4>
+                    <p class="text-muted">Search for chefs in your area, read reviews, and browse their menus to find the perfect match.</p>
                 </div>
             </div>
+            
             <div class="col-md-4">
-                <div class="text-center">
-                    <div class="feature-icon bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 80px; height: 80px;">
-                        <span class="fw-bold fs-3">2</span>
-                    </div>
-                    <h4>Book & Plan</h4>
-                    <p class="text-muted">Choose your menu, set the date, and communicate directly with your chef to customize your experience.</p>
+                <div class="step-card text-center">
+                    <div class="step-number bg-primary text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center fw-bold" style="width: 60px; height: 60px;">2</div>
+                    <h4 class="fw-bold mb-3">Book & Customize</h4>
+                    <p class="text-muted">Select your date, customize the menu, and communicate directly with your chef about preferences.</p>
                 </div>
             </div>
+            
             <div class="col-md-4">
-                <div class="text-center">
-                    <div class="feature-icon bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 80px; height: 80px;">
-                        <span class="fw-bold fs-3">3</span>
-                    </div>
-                    <h4>Enjoy & Review</h4>
-                    <p class="text-muted">Sit back and enjoy a personalized culinary experience in your own home, then share your feedback.</p>
+                <div class="step-card text-center">
+                    <div class="step-number bg-primary text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center fw-bold" style="width: 60px; height: 60px;">3</div>
+                    <h4 class="fw-bold mb-3">Enjoy & Review</h4>
+                    <p class="text-muted">Sit back and enjoy your personalized dining experience, then share your feedback.</p>
                 </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Satisfaction Guarantee - Preply Style -->
-<section class="py-5 bg-primary text-white">
-    <div class="container text-center">
-        <h2 class="display-5 fw-bold mb-4">Satisfaction Guaranteed</h2>
-        <p class="lead mb-4">Not happy with your chef? We'll find you another one for free or provide a full refund.</p>
+<!-- Recent Reviews Section -->
+{% if recent_reviews %}
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col-lg-8 mx-auto text-center">
+                <h2 class="display-5 fw-bold mb-3">What Our Clients Say</h2>
+                <p class="lead text-muted">Real reviews from satisfied customers</p>
+            </div>
+        </div>
+        
         <div class="row g-4">
+            {% for review in recent_reviews %}
             <div class="col-md-4">
-                <i class="fas fa-shield-alt fa-3x mb-3"></i>
-                <h5>100% Secure</h5>
-                <p>All payments are secure and protected</p>
+                <div class="review-card card h-100">
+                    <div class="card-body">
+                        <div class="review-rating mb-3">
+                            {% for i in range(5) %}
+                                <i class="fas fa-star {% if i < review.rating %}text-warning{% else %}text-muted{% endif %}"></i>
+                            {% endfor %}
+                        </div>
+                        <p class="card-text">"{{ review.comment[:150] }}{% if review.comment|length > 150 %}...{% endif %}"</p>
+                        <div class="reviewer-info">
+                            <strong>{{ review.reviewer.first_name }} {{ review.reviewer.last_name }}</strong>
+                            <br>
+                            <small class="text-muted">with Chef {{ review.chef_reviewed.first_name }}</small>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-4">
-                <i class="fas fa-redo fa-3x mb-3"></i>
-                <h5>Free Replacement</h5>
-                <p>Try another chef for free if not satisfied</p>
-            </div>
-            <div class="col-md-4">
-                <i class="fas fa-money-bill-wave fa-3x mb-3"></i>
-                <h5>Full Refund</h5>
-                <p>Complete refund if service doesn't meet expectations</p>
-            </div>
+            {% endfor %}
         </div>
-    </div>
-</section>
-
-<!-- CTA Section -->
-{% if not current_user.is_authenticated %}
-<section class="py-5 bg-primary text-white">
-    <div class="container text-center">
-        <h2 class="display-5 fw-bold mb-4">{{ get_translated_text('ready_to_experience') }}</h2>
-        <p class="lead mb-4">{{ get_translated_text('ready_to_experience_desc') }}</p>
-        <a href="{{ url_for('register') }}" class="btn btn-light btn-lg">
-            <i class="fas fa-user-plus me-2"></i>{{ get_translated_text('sign_up_now') }}
-        </a>
     </div>
 </section>
 {% endif %}
+
+<!-- CTA Section -->
+<section class="py-5 bg-primary text-white">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-lg-8 mx-auto">
+                <h2 class="display-5 fw-bold mb-3">Ready to Experience Fine Dining at Home?</h2>
+                <p class="lead mb-4">Join thousands of satisfied customers who have discovered the joy of professional in-home cooking.</p>
+                <div class="d-flex gap-3 justify-content-center">
+                    <a href="{{ url_for('browse_chefs') }}" class="btn btn-light btn-lg">Find Your Chef</a>
+                    <a href="{{ url_for('register') }}" class="btn btn-outline-light btn-lg">Get Started</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.hero-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 60vh;
+}
+
+.min-vh-50 {
+    min-height: 50vh;
+}
+
+.feature-card, .chef-card, .review-card {
+    transition: transform 0.3s ease;
+    border: none;
+}
+
+.feature-card:hover, .chef-card:hover, .review-card:hover {
+    transform: translateY(-5px);
+}
+
+.chef-card .card-img-top {
+    transition: transform 0.3s ease;
+}
+
+.chef-card:hover .card-img-top {
+    transform: scale(1.05);
+}
+
+.step-card {
+    padding: 2rem 1rem;
+}
+
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+</style>
 {% endblock %}

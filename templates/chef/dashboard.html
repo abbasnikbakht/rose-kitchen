@@ -1,0 +1,297 @@
+{% extends "base.html" %}
+
+{% block title %}Chef Dashboard - Chef Marketplace{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="fw-bold">Welcome back, Chef {{ current_user.first_name }}!</h1>
+                <a href="{{ url_for('chef_profile') }}" class="btn btn-primary">
+                    <i class="fas fa-edit me-2"></i>Edit Profile
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Quick Stats -->
+    <div class="row mb-5">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-calendar-check fa-2x mb-3"></i>
+                    <h4 class="fw-bold">{{ upcoming_bookings|length }}</h4>
+                    <p class="mb-0">Upcoming Bookings</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-clock fa-2x mb-3"></i>
+                    <h4 class="fw-bold">{{ pending_requests|length }}</h4>
+                    <p class="mb-0">Pending Requests</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-star fa-2x mb-3"></i>
+                    <h4 class="fw-bold">{{ chef_profile.rating }}</h4>
+                    <p class="mb-0">Average Rating</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-comments fa-2x mb-3"></i>
+                    <h4 class="fw-bold">{{ chef_profile.total_reviews }}</h4>
+                    <p class="mb-0">Total Reviews</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Pending Requests -->
+    {% if pending_requests %}
+    <div class="row mb-5">
+        <div class="col-12">
+            <h3 class="fw-bold mb-4">Pending Booking Requests</h3>
+            <div class="row g-4">
+                {% for booking in pending_requests %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card booking-card h-100 border-warning">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h5 class="card-title fw-bold">{{ booking.client.first_name }} {{ booking.client.last_name }}</h5>
+                                <span class="badge bg-warning">Pending</span>
+                            </div>
+                            
+                            <div class="booking-details mb-3">
+                                <div class="detail-item mb-2">
+                                    <i class="fas fa-calendar text-primary me-2"></i>
+                                    <strong>{{ booking.event_date.strftime('%B %d, %Y') }}</strong>
+                                </div>
+                                <div class="detail-item mb-2">
+                                    <i class="fas fa-clock text-primary me-2"></i>
+                                    <strong>{{ booking.event_time.strftime('%I:%M %p') }}</strong>
+                                </div>
+                                <div class="detail-item mb-2">
+                                    <i class="fas fa-users text-primary me-2"></i>
+                                    <strong>{{ booking.guest_count }} guests</strong>
+                                </div>
+                                <div class="detail-item mb-2">
+                                    <i class="fas fa-map-marker-alt text-primary me-2"></i>
+                                    <span>{{ booking.location_address[:30] }}...</span>
+                                </div>
+                            </div>
+                            
+                            <div class="booking-price mb-3">
+                                <h6 class="fw-bold text-success">${{ booking.total_price }}</h6>
+                            </div>
+                            
+                            <div class="d-grid gap-2">
+                                <a href="{{ url_for('booking_detail', booking_id=booking.id) }}" class="btn btn-primary">View Details</a>
+                                <div class="btn-group">
+                                    <form method="POST" action="{{ url_for('accept_booking', booking_id=booking.id) }}" class="d-inline">
+                                        <button type="submit" class="btn btn-success btn-sm">
+                                            <i class="fas fa-check me-1"></i>Accept
+                                        </button>
+                                    </form>
+                                    <form method="POST" action="{{ url_for('decline_booking', booking_id=booking.id) }}" class="d-inline">
+                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to decline this booking?')">
+                                            <i class="fas fa-times me-1"></i>Decline
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- Upcoming Bookings -->
+    {% if upcoming_bookings %}
+    <div class="row mb-5">
+        <div class="col-12">
+            <h3 class="fw-bold mb-4">Upcoming Bookings</h3>
+            <div class="row g-4">
+                {% for booking in upcoming_bookings %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card booking-card h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h5 class="card-title fw-bold">{{ booking.client.first_name }} {{ booking.client.last_name }}</h5>
+                                <span class="badge bg-success">{{ booking.status.title() }}</span>
+                            </div>
+                            
+                            <div class="booking-details mb-3">
+                                <div class="detail-item mb-2">
+                                    <i class="fas fa-calendar text-primary me-2"></i>
+                                    <strong>{{ booking.event_date.strftime('%B %d, %Y') }}</strong>
+                                </div>
+                                <div class="detail-item mb-2">
+                                    <i class="fas fa-clock text-primary me-2"></i>
+                                    <strong>{{ booking.event_time.strftime('%I:%M %p') }}</strong>
+                                </div>
+                                <div class="detail-item mb-2">
+                                    <i class="fas fa-users text-primary me-2"></i>
+                                    <strong>{{ booking.guest_count }} guests</strong>
+                                </div>
+                                <div class="detail-item mb-2">
+                                    <i class="fas fa-map-marker-alt text-primary me-2"></i>
+                                    <span>{{ booking.location_address[:30] }}...</span>
+                                </div>
+                            </div>
+                            
+                            <div class="booking-price mb-3">
+                                <h6 class="fw-bold text-success">${{ booking.total_price }}</h6>
+                            </div>
+                            
+                            <div class="d-grid gap-2">
+                                <a href="{{ url_for('booking_detail', booking_id=booking.id) }}" class="btn btn-primary">View Details</a>
+                                <button class="btn btn-outline-primary" onclick="messageClient({{ booking.client_id }})">
+                                    <i class="fas fa-message me-2"></i>Message Client
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- Recent Reviews -->
+    {% if recent_reviews %}
+    <div class="row">
+        <div class="col-12">
+            <h3 class="fw-bold mb-4">Recent Reviews</h3>
+            <div class="row g-4">
+                {% for review in recent_reviews %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card review-card h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h6 class="fw-bold">{{ review.reviewer.first_name }} {{ review.reviewer.last_name }}</h6>
+                                <div class="stars">
+                                    {% for i in range(5) %}
+                                        <i class="fas fa-star {% if i < review.rating %}text-warning{% else %}text-muted{% endif %}"></i>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            
+                            {% if review.comment %}
+                                <p class="card-text">{{ review.comment[:100] }}{% if review.comment|length > 100 %}...{% endif %}</p>
+                            {% endif %}
+                            
+                            <div class="review-ratings">
+                                <div class="row g-1">
+                                    <div class="col-6">
+                                        <small class="text-muted d-block">Food: {{ review.food_quality }}/5</small>
+                                    </div>
+                                    <div class="col-6">
+                                        <small class="text-muted d-block">Professional: {{ review.professionalism }}/5</small>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <small class="text-muted">{{ review.created_at.strftime('%B %Y') }}</small>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- Empty State -->
+    {% if not pending_requests and not upcoming_bookings and not recent_reviews %}
+    <div class="row">
+        <div class="col-12">
+            <div class="text-center py-5">
+                <i class="fas fa-utensils fa-4x text-muted mb-4"></i>
+                <h3 class="text-muted mb-3">Welcome to Chef Marketplace!</h3>
+                <p class="text-muted mb-4">Complete your profile to start receiving booking requests from clients.</p>
+                <a href="{{ url_for('chef_profile') }}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-edit me-2"></i>Complete Profile
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.booking-card {
+    transition: transform 0.3s ease;
+    border: none;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.booking-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.booking-card.border-warning {
+    border: 2px solid #ffc107 !important;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.card.bg-primary, .card.bg-success, .card.bg-warning, .card.bg-info {
+    border: none;
+}
+
+.card.bg-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+}
+
+.card.bg-success {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%) !important;
+}
+
+.card.bg-warning {
+    background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%) !important;
+}
+
+.card.bg-info {
+    background: linear-gradient(135deg, #17a2b8 0%, #6f42c1 100%) !important;
+}
+
+.review-card {
+    border: none;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.stars i {
+    font-size: 0.9rem;
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function messageClient(clientId) {
+    // This would open a messaging modal or redirect to messaging page
+    console.log('Message client:', clientId);
+    showNotification('Messaging feature coming soon!', 'info');
+}
+</script>
+{% endblock %}

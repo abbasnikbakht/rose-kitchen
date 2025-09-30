@@ -1,0 +1,221 @@
+{% extends "base.html" %}
+
+{% block title %}Client Dashboard - Chef Marketplace{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="fw-bold">Welcome back, {{ current_user.first_name }}!</h1>
+                <a href="{{ url_for('browse_chefs') }}" class="btn btn-primary">
+                    <i class="fas fa-search me-2"></i>Find a Chef
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Quick Stats -->
+    <div class="row mb-5">
+        <div class="col-md-3">
+            <div class="card bg-primary text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-calendar-check fa-2x mb-3"></i>
+                    <h4 class="fw-bold">{{ upcoming_bookings|length }}</h4>
+                    <p class="mb-0">Upcoming Bookings</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-utensils fa-2x mb-3"></i>
+                    <h4 class="fw-bold">{{ past_bookings|length }}</h4>
+                    <p class="mb-0">Past Experiences</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-star fa-2x mb-3"></i>
+                    <h4 class="fw-bold">4.8</h4>
+                    <p class="mb-0">Average Rating</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white">
+                <div class="card-body text-center">
+                    <i class="fas fa-heart fa-2x mb-3"></i>
+                    <h4 class="fw-bold">3</h4>
+                    <p class="mb-0">Favorite Chefs</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Upcoming Bookings -->
+    {% if upcoming_bookings %}
+    <div class="row mb-5">
+        <div class="col-12">
+            <h3 class="fw-bold mb-4">Upcoming Bookings</h3>
+            <div class="row g-4">
+                {% for booking in upcoming_bookings %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card booking-card h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h5 class="card-title fw-bold">{{ booking.chef.first_name }} {{ booking.chef.last_name }}</h5>
+                                <span class="badge bg-success">{{ booking.status.title() }}</span>
+                            </div>
+                            
+                            <div class="booking-details mb-3">
+                                <div class="detail-item mb-2">
+                                    <i class="fas fa-calendar text-primary me-2"></i>
+                                    <strong>{{ booking.event_date.strftime('%B %d, %Y') }}</strong>
+                                </div>
+                                <div class="detail-item mb-2">
+                                    <i class="fas fa-clock text-primary me-2"></i>
+                                    <strong>{{ booking.event_time.strftime('%I:%M %p') }}</strong>
+                                </div>
+                                <div class="detail-item mb-2">
+                                    <i class="fas fa-users text-primary me-2"></i>
+                                    <strong>{{ booking.guest_count }} guests</strong>
+                                </div>
+                                <div class="detail-item mb-2">
+                                    <i class="fas fa-map-marker-alt text-primary me-2"></i>
+                                    <span>{{ booking.location_address[:30] }}...</span>
+                                </div>
+                            </div>
+                            
+                            <div class="booking-price mb-3">
+                                <h6 class="fw-bold text-success">${{ booking.total_price }}</h6>
+                            </div>
+                            
+                            <div class="d-grid gap-2">
+                                <a href="{{ url_for('booking_detail', booking_id=booking.id) }}" class="btn btn-primary">View Details</a>
+                                <button class="btn btn-outline-primary" onclick="messageChef({{ booking.chef_id }})">
+                                    <i class="fas fa-message me-2"></i>Message Chef
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- Past Bookings -->
+    {% if past_bookings %}
+    <div class="row">
+        <div class="col-12">
+            <h3 class="fw-bold mb-4">Recent Experiences</h3>
+            <div class="row g-4">
+                {% for booking in past_bookings %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card booking-card h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <h5 class="card-title fw-bold">{{ booking.chef.first_name }} {{ booking.chef.last_name }}</h5>
+                                <span class="badge bg-secondary">Completed</span>
+                            </div>
+                            
+                            <div class="booking-details mb-3">
+                                <div class="detail-item mb-2">
+                                    <i class="fas fa-calendar text-primary me-2"></i>
+                                    <strong>{{ booking.event_date.strftime('%B %d, %Y') }}</strong>
+                                </div>
+                                <div class="detail-item mb-2">
+                                    <i class="fas fa-users text-primary me-2"></i>
+                                    <strong>{{ booking.guest_count }} guests</strong>
+                                </div>
+                            </div>
+                            
+                            <div class="d-grid gap-2">
+                                <a href="{{ url_for('booking_detail', booking_id=booking.id) }}" class="btn btn-outline-primary">View Details</a>
+                                {% if not booking.review %}
+                                    <a href="{{ url_for('review_booking', booking_id=booking.id) }}" class="btn btn-warning">
+                                        <i class="fas fa-star me-2"></i>Write Review
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- Empty State -->
+    {% if not upcoming_bookings and not past_bookings %}
+    <div class="row">
+        <div class="col-12">
+            <div class="text-center py-5">
+                <i class="fas fa-utensils fa-4x text-muted mb-4"></i>
+                <h3 class="text-muted mb-3">No bookings yet</h3>
+                <p class="text-muted mb-4">Start your culinary journey by booking your first chef experience!</p>
+                <a href="{{ url_for('browse_chefs') }}" class="btn btn-primary btn-lg">
+                    <i class="fas fa-search me-2"></i>Find a Chef
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.booking-card {
+    transition: transform 0.3s ease;
+    border: none;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.booking-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.card.bg-primary, .card.bg-success, .card.bg-warning, .card.bg-info {
+    border: none;
+}
+
+.card.bg-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+}
+
+.card.bg-success {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%) !important;
+}
+
+.card.bg-warning {
+    background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%) !important;
+}
+
+.card.bg-info {
+    background: linear-gradient(135deg, #17a2b8 0%, #6f42c1 100%) !important;
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function messageChef(chefId) {
+    // This would open a messaging modal or redirect to messaging page
+    console.log('Message chef:', chefId);
+    showNotification('Messaging feature coming soon!', 'info');
+}
+</script>
+{% endblock %}

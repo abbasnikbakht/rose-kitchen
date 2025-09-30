@@ -1,0 +1,307 @@
+{% extends "base.html" %}
+
+{% block title %}Write Review - Chef Marketplace{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ url_for('index') }}">Home</a></li>
+                    <li class="breadcrumb-item"><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                    <li class="breadcrumb-item"><a href="{{ url_for('booking_detail', booking_id=booking.id) }}">Booking #{{ booking.id }}</a></li>
+                    <li class="breadcrumb-item active">Write Review</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+    
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-body">
+                    <div class="text-center mb-4">
+                        <h2 class="fw-bold">How was your experience?</h2>
+                        <p class="text-muted">Help other clients by sharing your experience with Chef {{ booking.chef.first_name }} {{ booking.chef.last_name }}</p>
+                    </div>
+                    
+                    <!-- Booking Summary -->
+                    <div class="card bg-light mb-4">
+                        <div class="card-body">
+                            <h6 class="fw-bold mb-3">Booking Summary</h6>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="detail-item">
+                                        <i class="fas fa-calendar text-primary me-2"></i>
+                                        <strong>Date:</strong> {{ booking.event_date.strftime('%B %d, %Y') }}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="detail-item">
+                                        <i class="fas fa-clock text-primary me-2"></i>
+                                        <strong>Time:</strong> {{ booking.event_time.strftime('%I:%M %p') }}
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="detail-item">
+                                        <i class="fas fa-users text-primary me-2"></i>
+                                        <strong>Guests:</strong> {{ booking.guest_count }} people
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="detail-item">
+                                        <i class="fas fa-utensils text-primary me-2"></i>
+                                        <strong>Occasion:</strong> {{ booking.occasion_type.replace('_', ' ').title() }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <form method="POST">
+                        {{ form.hidden_tag() }}
+                        
+                        <!-- Overall Rating -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Overall Rating</label>
+                            <div class="star-rating" data-rating="0">
+                                <div class="stars d-flex justify-content-center">
+                                    {% for i in range(5) %}
+                                        <i class="fas fa-star star" data-rating="{{ i + 1 }}" style="font-size: 2rem; color: #dee2e6; cursor: pointer; margin: 0 0.25rem;"></i>
+                                    {% endfor %}
+                                </div>
+                                <input type="hidden" name="rating" value="0" required>
+                                <div class="text-center mt-2">
+                                    <small class="text-muted">Click on a star to rate</small>
+                                </div>
+                            </div>
+                            {% if form.rating.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.rating.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Detailed Ratings -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Food Quality</label>
+                                    <div class="star-rating-small" data-rating="0">
+                                        <div class="stars d-flex">
+                                            {% for i in range(5) %}
+                                                <i class="fas fa-star star" data-rating="{{ i + 1 }}" style="font-size: 1.2rem; color: #dee2e6; cursor: pointer; margin-right: 0.25rem;"></i>
+                                            {% endfor %}
+                                        </div>
+                                        <input type="hidden" name="food_quality" value="0" required>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Professionalism</label>
+                                    <div class="star-rating-small" data-rating="0">
+                                        <div class="stars d-flex">
+                                            {% for i in range(5) %}
+                                                <i class="fas fa-star star" data-rating="{{ i + 1 }}" style="font-size: 1.2rem; color: #dee2e6; cursor: pointer; margin-right: 0.25rem;"></i>
+                                            {% endfor %}
+                                        </div>
+                                        <input type="hidden" name="professionalism" value="0" required>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Cleanliness</label>
+                                    <div class="star-rating-small" data-rating="0">
+                                        <div class="stars d-flex">
+                                            {% for i in range(5) %}
+                                                <i class="fas fa-star star" data-rating="{{ i + 1 }}" style="font-size: 1.2rem; color: #dee2e6; cursor: pointer; margin-right: 0.25rem;"></i>
+                                            {% endfor %}
+                                        </div>
+                                        <input type="hidden" name="cleanliness" value="0" required>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Communication</label>
+                                    <div class="star-rating-small" data-rating="0">
+                                        <div class="stars d-flex">
+                                            {% for i in range(5) %}
+                                                <i class="fas fa-star star" data-rating="{{ i + 1 }}" style="font-size: 1.2rem; color: #dee2e6; cursor: pointer; margin-right: 0.25rem;"></i>
+                                            {% endfor %}
+                                        </div>
+                                        <input type="hidden" name="communication" value="0" required>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Value for Money</label>
+                                    <div class="star-rating-small" data-rating="0">
+                                        <div class="stars d-flex">
+                                            {% for i in range(5) %}
+                                                <i class="fas fa-star star" data-rating="{{ i + 1 }}" style="font-size: 1.2rem; color: #dee2e6; cursor: pointer; margin-right: 0.25rem;"></i>
+                                            {% endfor %}
+                                        </div>
+                                        <input type="hidden" name="value_for_money" value="0" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Review Comment -->
+                        <div class="mb-4">
+                            {{ form.comment.label(class="form-label fw-bold") }}
+                            {{ form.comment(class="form-control" + (" is-invalid" if form.comment.errors else ""), rows="4", placeholder="Share details about your experience...") }}
+                            {% if form.comment.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.comment.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <small class="text-muted">Your review will help other clients make informed decisions</small>
+                        </div>
+                        
+                        <!-- Submit Button -->
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{{ url_for('booking_detail', booking_id=booking.id) }}" class="btn btn-outline-secondary me-md-2">Cancel</a>
+                            {{ form.submit(class="btn btn-primary") }}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.card {
+    border: none;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.star {
+    transition: color 0.2s ease;
+}
+
+.star:hover,
+.star.active {
+    color: #ffc107 !important;
+}
+
+.star-rating .star:hover ~ .star {
+    color: #dee2e6 !important;
+}
+
+.star-rating-small .star:hover ~ .star {
+    color: #dee2e6 !important;
+}
+
+.form-control:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+}
+
+.breadcrumb {
+    background: none;
+    padding: 0;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+    content: ">";
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Star rating functionality
+    document.querySelectorAll('.star-rating, .star-rating-small').forEach(ratingContainer => {
+        const stars = ratingContainer.querySelectorAll('.star');
+        const hiddenInput = ratingContainer.querySelector('input[type="hidden"]');
+        
+        stars.forEach((star, index) => {
+            star.addEventListener('click', function() {
+                const rating = parseInt(this.dataset.rating);
+                setRating(ratingContainer, rating);
+            });
+            
+            star.addEventListener('mouseenter', function() {
+                const rating = parseInt(this.dataset.rating);
+                highlightStars(ratingContainer, rating);
+            });
+        });
+        
+        ratingContainer.addEventListener('mouseleave', function() {
+            const currentRating = parseInt(this.dataset.rating) || 0;
+            highlightStars(ratingContainer, currentRating);
+        });
+    });
+    
+    function setRating(ratingContainer, rating) {
+        ratingContainer.dataset.rating = rating;
+        const stars = ratingContainer.querySelectorAll('.star');
+        const hiddenInput = ratingContainer.querySelector('input[type="hidden"]');
+        
+        stars.forEach((star, index) => {
+            if (index < rating) {
+                star.classList.add('active');
+            } else {
+                star.classList.remove('active');
+            }
+        });
+        
+        if (hiddenInput) {
+            hiddenInput.value = rating;
+        }
+    }
+    
+    function highlightStars(ratingContainer, rating) {
+        const stars = ratingContainer.querySelectorAll('.star');
+        stars.forEach((star, index) => {
+            if (index < rating) {
+                star.style.color = '#ffc107';
+            } else {
+                star.style.color = '#dee2e6';
+            }
+        });
+    }
+    
+    // Form validation
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function(e) {
+        const overallRating = document.querySelector('.star-rating input[type="hidden"]').value;
+        const foodQuality = document.querySelector('input[name="food_quality"]').value;
+        const professionalism = document.querySelector('input[name="professionalism"]').value;
+        const cleanliness = document.querySelector('input[name="cleanliness"]').value;
+        const communication = document.querySelector('input[name="communication"]').value;
+        const valueForMoney = document.querySelector('input[name="value_for_money"]').value;
+        
+        if (overallRating == 0 || foodQuality == 0 || professionalism == 0 || cleanliness == 0 || communication == 0 || valueForMoney == 0) {
+            e.preventDefault();
+            showNotification('Please provide ratings for all categories', 'error');
+            return false;
+        }
+    });
+});
+</script>
+{% endblock %}

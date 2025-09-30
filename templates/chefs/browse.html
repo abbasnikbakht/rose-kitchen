@@ -1,0 +1,231 @@
+{% extends "base.html" %}
+
+{% block title %}Find Chefs - Chef Marketplace{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Search and Filter Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h3 class="fw-bold mb-4">Find Your Perfect Chef</h3>
+                    
+                    <form method="GET" class="row g-3">
+                        <div class="col-md-3">
+                            <label for="cuisine" class="form-label">Cuisine Type</label>
+                            <select name="cuisine" id="cuisine" class="form-select">
+                                <option value="">All Cuisines</option>
+                                <option value="italian" {% if cuisine_filter == 'italian' %}selected{% endif %}>Italian</option>
+                                <option value="french" {% if cuisine_filter == 'french' %}selected{% endif %}>French</option>
+                                <option value="asian" {% if cuisine_filter == 'asian' %}selected{% endif %}>Asian</option>
+                                <option value="mexican" {% if cuisine_filter == 'mexican' %}selected{% endif %}>Mexican</option>
+                                <option value="mediterranean" {% if cuisine_filter == 'mediterranean' %}selected{% endif %}>Mediterranean</option>
+                                <option value="american" {% if cuisine_filter == 'american' %}selected{% endif %}>American</option>
+                                <option value="indian" {% if cuisine_filter == 'indian' %}selected{% endif %}>Indian</option>
+                                <option value="japanese" {% if cuisine_filter == 'japanese' %}selected{% endif %}>Japanese</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-2">
+                            <label for="price_min" class="form-label">Min Price</label>
+                            <input type="number" name="price_min" id="price_min" class="form-control" placeholder="$25" value="{{ price_min or '' }}">
+                        </div>
+                        
+                        <div class="col-md-2">
+                            <label for="price_max" class="form-label">Max Price</label>
+                            <input type="number" name="price_max" id="price_max" class="form-control" placeholder="$200" value="{{ price_max or '' }}">
+                        </div>
+                        
+                        <div class="col-md-2">
+                            <label for="rating_min" class="form-label">Min Rating</label>
+                            <select name="rating_min" id="rating_min" class="form-select">
+                                <option value="">Any Rating</option>
+                                <option value="4.5" {% if rating_min == 4.5 %}selected{% endif %}>4.5+ Stars</option>
+                                <option value="4.0" {% if rating_min == 4.0 %}selected{% endif %}>4.0+ Stars</option>
+                                <option value="3.5" {% if rating_min == 3.5 %}selected{% endif %}>3.5+ Stars</option>
+                                <option value="3.0" {% if rating_min == 3.0 %}selected{% endif %}>3.0+ Stars</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-3 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary me-2">Search</button>
+                            <a href="{{ url_for('browse_chefs') }}" class="btn btn-outline-secondary">Clear</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Results Section -->
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4 class="fw-bold mb-0">
+                    {% if chefs.total > 0 %}
+                        {{ chefs.total }} Chef{{ 's' if chefs.total != 1 else '' }} Found
+                    {% else %}
+                        No Chefs Found
+                    {% endif %}
+                </h4>
+                
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                        Sort By
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#">Highest Rated</a></li>
+                        <li><a class="dropdown-item" href="#">Lowest Price</a></li>
+                        <li><a class="dropdown-item" href="#">Most Reviews</a></li>
+                        <li><a class="dropdown-item" href="#">Newest</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Chef Cards -->
+    {% if chefs.items %}
+    <div class="row g-4">
+        {% for chef in chefs.items %}
+        <div class="col-lg-4 col-md-6">
+            <div class="chef-card card h-100 shadow-sm">
+                {% if chef.profile_photo %}
+                    <img src="{{ url_for('static', filename='uploads/profiles/' + chef.profile_photo) }}" class="card-img-top" alt="{{ chef.user.first_name }} {{ chef.user.last_name }}" style="height: 250px; object-fit: cover;">
+                {% else %}
+                    <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 250px;">
+                        <i class="fas fa-user fa-4x text-muted"></i>
+                    </div>
+                {% endif %}
+                
+                <div class="card-body d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h5 class="card-title fw-bold mb-0">{{ chef.user.first_name }} {{ chef.user.last_name }}</h5>
+                        <span class="badge bg-success">Available</span>
+                    </div>
+                    
+                    <p class="card-text text-muted flex-grow-1">{{ chef.bio[:120] }}{% if chef.bio|length > 120 %}...{% endif %}</p>
+                    
+                    <div class="chef-rating mb-3">
+                        <div class="d-flex align-items-center">
+                            <div class="stars me-2">
+                                {% for i in range(5) %}
+                                    <i class="fas fa-star {% if i < chef.rating|int %}text-warning{% else %}text-muted{% endif %}"></i>
+                                {% endfor %}
+                            </div>
+                            <span class="text-muted small">({{ chef.total_reviews }} reviews)</span>
+                        </div>
+                    </div>
+                    
+                    <div class="chef-details mb-3">
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <small class="text-muted d-block">
+                                    <i class="fas fa-dollar-sign me-1"></i>From ${{ chef.base_price_per_person }}/person
+                                </small>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted d-block">
+                                    <i class="fas fa-users me-1"></i>{{ chef.min_guests }}-{{ chef.max_guests }} guests
+                                </small>
+                            </div>
+                        </div>
+                        <small class="text-muted d-block mt-1">
+                            <i class="fas fa-map-marker-alt me-1"></i>{{ chef.service_areas[:40] }}...
+                        </small>
+                    </div>
+                    
+                    <div class="chef-specialties mb-3">
+                        {% if chef.specialties %}
+                            {% set specialties = chef.specialties.split(',') %}
+                            {% for specialty in specialties[:3] %}
+                                <span class="badge bg-light text-dark me-1">{{ specialty.strip() }}</span>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <a href="{{ url_for('chef_detail', chef_id=chef.id) }}" class="btn btn-primary">View Profile</a>
+                        {% if current_user.is_authenticated and current_user.role == 'client' %}
+                            <a href="{{ url_for('book_chef', chef_id=chef.id) }}" class="btn btn-outline-primary">Book Now</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <!-- Pagination -->
+    {% if chefs.pages > 1 %}
+    <nav aria-label="Chef pagination" class="mt-5">
+        <ul class="pagination justify-content-center">
+            {% if chefs.has_prev %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('browse_chefs', page=chefs.prev_num, cuisine=cuisine_filter, price_min=price_min, price_max=price_max, rating_min=rating_min) }}">Previous</a>
+                </li>
+            {% endif %}
+            
+            {% for page_num in chefs.iter_pages() %}
+                {% if page_num %}
+                    {% if page_num != chefs.page %}
+                        <li class="page-item">
+                            <a class="page-link" href="{{ url_for('browse_chefs', page=page_num, cuisine=cuisine_filter, price_min=price_min, price_max=price_max, rating_min=rating_min) }}">{{ page_num }}</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ page_num }}</span>
+                        </li>
+                    {% endif %}
+                {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link">...</span>
+                    </li>
+                {% endif %}
+            {% endfor %}
+            
+            {% if chefs.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('browse_chefs', page=chefs.next_num, cuisine=cuisine_filter, price_min=price_min, price_max=price_max, rating_min=rating_min) }}">Next</a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+    
+    {% else %}
+    <div class="text-center py-5">
+        <i class="fas fa-search fa-3x text-muted mb-3"></i>
+        <h4 class="text-muted">No chefs found matching your criteria</h4>
+        <p class="text-muted">Try adjusting your search filters or <a href="{{ url_for('browse_chefs') }}">browse all chefs</a></p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+.chef-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: none;
+}
+
+.chef-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+.chef-card .card-img-top {
+    transition: transform 0.3s ease;
+}
+
+.chef-card:hover .card-img-top {
+    transform: scale(1.05);
+}
+
+.stars i {
+    font-size: 0.9rem;
+}
+</style>
+{% endblock %}
