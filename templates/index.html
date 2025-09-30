@@ -9,7 +9,7 @@
         <div class="row align-items-center min-vh-50">
             <div class="col-lg-6">
                 <h1 class="display-4 fw-bold mb-4 text-dark">Learn faster with your best chef.</h1>
-                <p class="lead mb-4 text-muted">Experience restaurant-quality dining in the comfort of your home. Connect with skilled chefs who bring culinary excellence to your kitchen.</p>
+                <p class="lead mb-4 text-muted">Experience restaurant-quality dining in the comfort of your home. Choose from professional chefs who can cook for you or teach you to cook amazing meals from around the world.</p>
                 <div class="d-flex gap-3">
                     <a href="{{ url_for('browse_chefs') }}" class="btn btn-primary btn-lg">Get started</a>
                     <a href="{{ url_for('register') }}" class="btn btn-outline-primary btn-lg">Become a chef</a>
@@ -73,7 +73,7 @@
                         <i class="fas fa-star fa-lg"></i>
                     </div>
                     <h4 class="fw-bold mb-3">Find your chef.</h4>
-                    <p class="text-muted">We'll connect you with a chef who motivates, challenges, and supports you — from first meal to culinary mastery.</p>
+                    <p class="text-muted">We'll connect you with a chef who can cook for you or teach you to cook — from Persian to Italian, Indian to Chinese cuisines.</p>
                 </div>
             </div>
             
@@ -83,7 +83,7 @@
                         <i class="fas fa-utensils fa-lg"></i>
                     </div>
                     <h4 class="fw-bold mb-3">Start cooking.</h4>
-                    <p class="text-muted">Your chef will tailor every meal to your preferences, so progress feels personal from the very beginning.</p>
+                    <p class="text-muted">Choose to have your chef cook for you, or learn to cook alongside them. Every experience is tailored to your preferences.</p>
                 </div>
             </div>
             
@@ -93,7 +93,120 @@
                         <i class="fas fa-chart-line fa-lg"></i>
                     </div>
                     <h4 class="fw-bold mb-3">Make progress every week.</h4>
-                    <p class="text-muted">Choose how many meals you want to book and build lasting culinary confidence, one experience at a time.</p>
+                    <p class="text-muted">Master new cuisines and techniques. Build lasting culinary confidence, one cooking lesson at a time.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Service Types Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-lg-8 mx-auto">
+                <h2 class="display-5 fw-bold mb-3">Two Ways to Experience Great Food</h2>
+                <p class="lead text-muted">Choose the experience that's right for you</p>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4 text-center">
+                        <div class="feature-icon bg-primary text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                            <i class="fas fa-utensils fa-2x"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3">Chef Cooks for You</h4>
+                        <p class="text-muted mb-4">Sit back and relax while our professional chefs prepare restaurant-quality meals in your kitchen. Perfect for special occasions or when you want to treat yourself.</p>
+                        <ul class="list-unstyled text-start">
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Professional meal preparation</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Clean up included</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Custom menu planning</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Dietary accommodations</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4 text-center">
+                        <div class="feature-icon bg-success text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
+                            <i class="fas fa-graduation-cap fa-2x"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3">Chef Cooks & Teaches You</h4>
+                        <p class="text-muted mb-4">Learn to cook alongside professional chefs. Master new cuisines, techniques, and recipes while creating amazing meals together.</p>
+                        <ul class="list-unstyled text-start">
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Hands-on cooking lessons</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Learn authentic techniques</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Take home recipes</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Cultural cooking insights</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Cuisine Types Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-lg-8 mx-auto">
+                <h2 class="display-5 fw-bold mb-3">Explore World Cuisines</h2>
+                <p class="lead text-muted">Learn authentic recipes from around the globe</p>
+            </div>
+        </div>
+        
+        <div class="row g-3">
+            <div class="col-md-3 col-sm-6">
+                <div class="cuisine-card text-center p-3 bg-white rounded shadow-sm">
+                    <i class="fas fa-pepper-hot fa-2x text-danger mb-2"></i>
+                    <h6 class="fw-bold">Persian</h6>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="cuisine-card text-center p-3 bg-white rounded shadow-sm">
+                    <i class="fas fa-pepper-hot fa-2x text-warning mb-2"></i>
+                    <h6 class="fw-bold">Indian</h6>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="cuisine-card text-center p-3 bg-white rounded shadow-sm">
+                    <i class="fas fa-fish fa-2x text-info mb-2"></i>
+                    <h6 class="fw-bold">Chinese</h6>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="cuisine-card text-center p-3 bg-white rounded shadow-sm">
+                    <i class="fas fa-pizza-slice fa-2x text-success mb-2"></i>
+                    <h6 class="fw-bold">Italian</h6>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="cuisine-card text-center p-3 bg-white rounded shadow-sm">
+                    <i class="fas fa-bread-slice fa-2x text-primary mb-2"></i>
+                    <h6 class="fw-bold">French</h6>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="cuisine-card text-center p-3 bg-white rounded shadow-sm">
+                    <i class="fas fa-pepper-hot fa-2x text-danger mb-2"></i>
+                    <h6 class="fw-bold">Mexican</h6>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="cuisine-card text-center p-3 bg-white rounded shadow-sm">
+                    <i class="fas fa-fish fa-2x text-info mb-2"></i>
+                    <h6 class="fw-bold">Japanese</h6>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="cuisine-card text-center p-3 bg-white rounded shadow-sm">
+                    <i class="fas fa-pepper-hot fa-2x text-warning mb-2"></i>
+                    <h6 class="fw-bold">Thai</h6>
                 </div>
             </div>
         </div>
@@ -101,7 +214,7 @@
 </section>
 
 <!-- Guarantee Section -->
-<section class="py-5 bg-light">
+<section class="py-5">
     <div class="container">
         <div class="row text-center">
             <div class="col-lg-8 mx-auto">

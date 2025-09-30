@@ -136,6 +136,34 @@
                             <small class="text-muted">Please provide the complete address where the chef will cook</small>
                         </div>
                         
+                        <!-- Service Type -->
+                        <div class="mb-4">
+                            {{ form.service_type.label(class="form-label") }}
+                            {{ form.service_type(class="form-select" + (" is-invalid" if form.service_type.errors else "")) }}
+                            {% if form.service_type.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.service_type.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <small class="text-muted">Choose whether you want the chef to cook for you or teach you to cook</small>
+                        </div>
+                        
+                        <!-- Cuisine Preference -->
+                        <div class="mb-4">
+                            {{ form.cuisine_preference.label(class="form-label") }}
+                            {{ form.cuisine_preference(class="form-select" + (" is-invalid" if form.cuisine_preference.errors else "")) }}
+                            {% if form.cuisine_preference.errors %}
+                                <div class="invalid-feedback">
+                                    {% for error in form.cuisine_preference.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <small class="text-muted">Select a specific cuisine or leave as "Any Cuisine"</small>
+                        </div>
+                        
                         <!-- Occasion Type -->
                         <div class="mb-4">
                             {{ form.occasion_type.label(class="form-label") }}

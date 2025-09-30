@@ -84,16 +84,20 @@ class ChefProfile(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     bio = db.Column(db.Text)
     specialties = db.Column(db.Text)  # JSON string of specialties
+    cuisine_types = db.Column(db.Text)  # JSON string of cuisine types (Persian, Indian, Chinese, Italian, etc.)
     experience_years = db.Column(db.Integer)
     certifications = db.Column(db.Text)  # JSON string of certifications
     service_areas = db.Column(db.Text)  # JSON string of service areas
     base_price_per_person = db.Column(db.Numeric(10, 2))
+    teaching_price_per_person = db.Column(db.Numeric(10, 2))  # Additional price for teaching
     min_guests = db.Column(db.Integer, default=2)
     max_guests = db.Column(db.Integer, default=20)
     travel_fee = db.Column(db.Numeric(10, 2), default=0)
     profile_photo = db.Column(db.String(200))
     cover_photo = db.Column(db.String(200))
     is_available = db.Column(db.Boolean, default=True)
+    offers_teaching = db.Column(db.Boolean, default=True)  # Whether chef offers cooking lessons
+    teaching_experience = db.Column(db.Text)  # Description of teaching experience
     rating = db.Column(db.Numeric(3, 2), default=0)
     total_reviews = db.Column(db.Integer, default=0)
     response_time_hours = db.Column(db.Integer, default=24)
@@ -156,6 +160,8 @@ class Booking(db.Model):
     duration_hours = db.Column(db.Integer, default=3)
     guest_count = db.Column(db.Integer, nullable=False)
     location_address = db.Column(db.Text, nullable=False)
+    service_type = db.Column(db.String(20), default='cooking_only')  # cooking_only, cooking_and_teaching
+    cuisine_preference = db.Column(db.String(50))  # Persian, Indian, Chinese, Italian, etc.
     occasion_type = db.Column(db.String(50))  # dinner party, romantic dinner, etc.
     dietary_restrictions = db.Column(db.Text)
     special_requests = db.Column(db.Text)
@@ -227,13 +233,29 @@ class RegistrationForm(FlaskForm):
 class ChefProfileForm(FlaskForm):
     bio = TextAreaField('Bio', validators=[DataRequired(), Length(min=50, max=1000)])
     specialties = StringField('Specialties (comma-separated)', validators=[DataRequired()])
+    cuisine_types = SelectField('Cuisine Types', choices=[
+        ('persian', 'Persian'),
+        ('indian', 'Indian'),
+        ('chinese', 'Chinese'),
+        ('italian', 'Italian'),
+        ('french', 'French'),
+        ('mexican', 'Mexican'),
+        ('japanese', 'Japanese'),
+        ('thai', 'Thai'),
+        ('mediterranean', 'Mediterranean'),
+        ('american', 'American'),
+        ('other', 'Other')
+    ], validators=[DataRequired()], multiple=True)
     experience_years = IntegerField('Years of Experience', validators=[DataRequired(), NumberRange(min=1, max=50)])
     certifications = StringField('Certifications (comma-separated)', validators=[Optional()])
     service_areas = StringField('Service Areas (comma-separated)', validators=[DataRequired()])
     base_price_per_person = DecimalField('Base Price per Person ($)', validators=[DataRequired(), NumberRange(min=25, max=500)])
+    teaching_price_per_person = DecimalField('Teaching Price per Person ($)', validators=[Optional(), NumberRange(min=0, max=200)])
     min_guests = IntegerField('Minimum Guests', validators=[DataRequired(), NumberRange(min=1, max=10)])
     max_guests = IntegerField('Maximum Guests', validators=[DataRequired(), NumberRange(min=2, max=50)])
     travel_fee = DecimalField('Travel Fee ($)', validators=[Optional(), NumberRange(min=0, max=100)])
+    offers_teaching = BooleanField('Offer Cooking Lessons', default=True)
+    teaching_experience = TextAreaField('Teaching Experience', validators=[Optional(), Length(max=500)])
     profile_photo = FileField('Profile Photo', validators=[FileAllowed(['jpg', 'png', 'jpeg'], 'Images only!')])
     cover_photo = FileField('Cover Photo', validators=[FileAllowed(['jpg', 'png', 'jpeg'], 'Images only!')])
     submit = SubmitField('Update Profile')
@@ -243,6 +265,24 @@ class BookingForm(FlaskForm):
     event_time = TimeField('Event Time', validators=[DataRequired()])
     guest_count = IntegerField('Number of Guests', validators=[DataRequired(), NumberRange(min=1, max=50)])
     location_address = TextAreaField('Event Location', validators=[DataRequired(), Length(min=10, max=500)])
+    service_type = SelectField('Service Type', choices=[
+        ('cooking_only', 'Chef Cooks for You'),
+        ('cooking_and_teaching', 'Chef Cooks & Teaches You')
+    ], validators=[DataRequired()])
+    cuisine_preference = SelectField('Cuisine Preference', choices=[
+        ('', 'Any Cuisine'),
+        ('persian', 'Persian'),
+        ('indian', 'Indian'),
+        ('chinese', 'Chinese'),
+        ('italian', 'Italian'),
+        ('french', 'French'),
+        ('mexican', 'Mexican'),
+        ('japanese', 'Japanese'),
+        ('thai', 'Thai'),
+        ('mediterranean', 'Mediterranean'),
+        ('american', 'American'),
+        ('other', 'Other')
+    ], validators=[Optional()])
     occasion_type = SelectField('Occasion', choices=[
         ('dinner_party', 'Dinner Party'),
         ('romantic_dinner', 'Romantic Dinner'),
