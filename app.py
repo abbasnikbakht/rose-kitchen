@@ -725,9 +725,44 @@ def migrate_database():
     try:
         with app.app_context():
             db.create_all()
-            from sqlalchemy import inspect
+            from sqlalchemy import inspect, text
             inspector = inspect(db.engine)
             tables = inspector.get_table_names()
+            
+            # Add new columns if they don't exist
+            try:
+                chef_columns = [col['name'] for col in inspector.get_columns('chef_profile')]
+                booking_columns = [col['name'] for col in inspector.get_columns('booking')]
+                
+                # Add new columns to chef_profile
+                new_chef_columns = [
+                    ('cuisine_types', 'TEXT'),
+                    ('teaching_price_per_person', 'NUMERIC(10, 2)'),
+                    ('offers_teaching', 'BOOLEAN DEFAULT TRUE'),
+                    ('teaching_experience', 'TEXT')
+                ]
+                
+                for column_name, column_type in new_chef_columns:
+                    if column_name not in chef_columns:
+                        with db.engine.connect() as conn:
+                            conn.execute(text(f"ALTER TABLE chef_profile ADD COLUMN {column_name} {column_type}"))
+                            conn.commit()
+                
+                # Add new columns to booking
+                new_booking_columns = [
+                    ('service_type', 'VARCHAR(20) DEFAULT \'cooking_only\''),
+                    ('cuisine_preference', 'VARCHAR(50)')
+                ]
+                
+                for column_name, column_type in new_booking_columns:
+                    if column_name not in booking_columns:
+                        with db.engine.connect() as conn:
+                            conn.execute(text(f"ALTER TABLE booking ADD COLUMN {column_name} {column_type}"))
+                            conn.commit()
+                            
+            except Exception as col_error:
+                return f"Table creation successful but column migration failed: {str(col_error)}"
+            
             return f"Database migration successful! Created tables: {tables}"
     except Exception as e:
         return f"Migration failed: {str(e)}", 500
