@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}Messages - Personal Chef Marketplace{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="display-5 fw-bold mb-4">Messages</h1>
+            <p class="lead text-muted mb-5">Communicate with chefs and clients</p>
+        </div>
+    </div>
+
+    {% if conversations %}
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="list-group list-group-flush">
+                        {% for partner_id, messages in conversations.items() %}
+                        {% set partner = messages[0].sender if messages[0].sender_id == partner_id else messages[0].recipient %}
+                        {% set last_message = messages[-1] %}
+                        {% set unread_count = messages|selectattr('recipient_id', 'equalto', current_user.id)|selectattr('is_read', 'equalto', false)|list|length %}
+                        
+                        <a href="{{ url_for('conversation', user_id=partner_id) }}" class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between align-items-center">
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                                        {% if partner.profile_image %}
+                                            <img src="{{ partner.profile_image }}" alt="{{ partner.first_name }}" class="rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
+                                        {% else %}
+                                            <i class="fas fa-user text-white"></i>
+                                        {% endif %}
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-1">
+                                            {{ partner.first_name }} {{ partner.last_name }}
+                                            {% if unread_count > 0 %}
+                                                <span class="badge bg-primary ms-2">{{ unread_count }}</span>
+                                            {% endif %}
+                                        </h6>
+                                        <p class="mb-1 text-muted">
+                                            {% if last_message.subject %}
+                                                <strong>{{ last_message.subject }}:</strong>
+                                            {% endif %}
+                                            {{ last_message.content[:100] }}{% if last_message.content|length > 100 %}...{% endif %}
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="text-end">
+                                    <small class="text-muted">{{ last_message.created_at.strftime('%m/%d/%Y') }}</small>
+                                    <br>
+                                    <small class="text-muted">{{ last_message.created_at.strftime('%I:%M %p') }}</small>
+                                </div>
+                            </div>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="row">
+        <div class="col-12 text-center py-5">
+            <i class="fas fa-comments fa-3x text-muted mb-3"></i>
+            <h3>No messages yet</h3>
+            <p class="text-muted">Start a conversation with a chef or client to see messages here.</p>
+            <a href="{{ url_for('browse_cooks') }}" class="btn btn-primary">
+                <i class="fas fa-search me-2"></i>Find Chefs
+            </a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

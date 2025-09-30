@@ -12,11 +12,11 @@ def create_tables():
     """Create database tables if they don't exist"""
     with app.app_context():
         db.create_all()
-        print("✅ Database tables created successfully!")
+        print("Database tables created successfully!")
 
 def main():
     """Main function to start the application"""
-    print("🍳 Starting KitchenBook Application...")
+    print("Starting Personal Chef Marketplace Application...")
     print("=" * 50)
     
     # Create database tables
@@ -27,20 +27,20 @@ def main():
     port = int(os.environ.get('PORT', 5000))
     host = os.environ.get('HOST', '127.0.0.1')
     
-    print(f"🌐 Server will run on: http://{host}:{port}")
-    print(f"🐛 Debug mode: {'ON' if debug_mode else 'OFF'}")
+    print(f"Server will run on: http://{host}:{port}")
+    print(f"Debug mode: {'ON' if debug_mode else 'OFF'}")
     print("=" * 50)
-    print("🚀 Starting Flask development server...")
-    print("📱 Open your browser and navigate to the URL above")
-    print("⏹️  Press Ctrl+C to stop the server")
+    print("Starting Flask development server...")
+    print("Open your browser and navigate to the URL above")
+    print("Press Ctrl+C to stop the server")
     print("=" * 50)
     
     try:
         app.run(host=host, port=port, debug=debug_mode)
     except KeyboardInterrupt:
-        print("\n👋 Server stopped. Goodbye!")
+        print("\nServer stopped. Goodbye!")
     except Exception as e:
-        print(f"❌ Error starting server: {e}")
+        print(f"Error starting server: {e}")
         sys.exit(1)
 
 if __name__ == '__main__':

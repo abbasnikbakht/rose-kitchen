@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+
+{% block title %}Search Chefs - Personal Chef Marketplace{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="display-4 fw-bold mb-4">Find Your Perfect Chef</h1>
+            <p class="lead text-muted mb-5">Discover professional chefs in your area for in-home cooking experiences</p>
+        </div>
+    </div>
+
+    <!-- Search Form -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <form method="GET" action="{{ url_for('browse_cooks') }}">
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <label for="location" class="form-label">Location</label>
+                                <input type="text" class="form-control" id="location" name="location" 
+                                       placeholder="City, State or ZIP" value="{{ request.args.get('location', '') }}">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="cuisine_type" class="form-label">Cuisine Type</label>
+                                <select class="form-select" id="cuisine_type" name="cuisine_type">
+                                    <option value="">All Cuisines</option>
+                                    <option value="italian" {% if request.args.get('cuisine_type') == 'italian' %}selected{% endif %}>Italian</option>
+                                    <option value="french" {% if request.args.get('cuisine_type') == 'french' %}selected{% endif %}>French</option>
+                                    <option value="asian" {% if request.args.get('cuisine_type') == 'asian' %}selected{% endif %}>Asian</option>
+                                    <option value="persian" {% if request.args.get('cuisine_type') == 'persian' %}selected{% endif %}>Persian</option>
+                                    <option value="mexican" {% if request.args.get('cuisine_type') == 'mexican' %}selected{% endif %}>Mexican</option>
+                                    <option value="american" {% if request.args.get('cuisine_type') == 'american' %}selected{% endif %}>American</option>
+                                    <option value="mediterranean" {% if request.args.get('cuisine_type') == 'mediterranean' %}selected{% endif %}>Mediterranean</option>
+                                    <option value="indian" {% if request.args.get('cuisine_type') == 'indian' %}selected{% endif %}>Indian</option>
+                                    <option value="thai" {% if request.args.get('cuisine_type') == 'thai' %}selected{% endif %}>Thai</option>
+                                    <option value="japanese" {% if request.args.get('cuisine_type') == 'japanese' %}selected{% endif %}>Japanese</option>
+                                    <option value="other" {% if request.args.get('cuisine_type') == 'other' %}selected{% endif %}>Other</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="event_type" class="form-label">Event Type</label>
+                                <select class="form-select" id="event_type" name="event_type">
+                                    <option value="">Any Event</option>
+                                    <option value="private_dinner" {% if request.args.get('event_type') == 'private_dinner' %}selected{% endif %}>Private Dinner</option>
+                                    <option value="meal_prep" {% if request.args.get('event_type') == 'meal_prep' %}selected{% endif %}>Meal Prep</option>
+                                    <option value="cooking_class" {% if request.args.get('event_type') == 'cooking_class' %}selected{% endif %}>Cooking Class</option>
+                                    <option value="special_event" {% if request.args.get('event_type') == 'special_event' %}selected{% endif %}>Special Event</option>
+                                    <option value="corporate_event" {% if request.args.get('event_type') == 'corporate_event' %}selected{% endif %}>Corporate Event</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="row g-3 mt-2">
+                            <div class="col-md-3">
+                                <label for="min_price" class="form-label">Min Price ($)</label>
+                                <input type="number" class="form-control" id="min_price" name="min_price" 
+                                       placeholder="0" value="{{ request.args.get('min_price', '') }}">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="max_price" class="form-label">Max Price ($)</label>
+                                <input type="number" class="form-control" id="max_price" name="max_price" 
+                                       placeholder="1000" value="{{ request.args.get('max_price', '') }}">
+                            </div>
+                            <div class="col-md-3">
+                                <label for="min_rating" class="form-label">Minimum Rating</label>
+                                <select class="form-select" id="min_rating" name="min_rating">
+                                    <option value="0" {% if request.args.get('min_rating', '0') == '0' %}selected{% endif %}>Any Rating</option>
+                                    <option value="1" {% if request.args.get('min_rating') == '1' %}selected{% endif %}>1+ Stars</option>
+                                    <option value="2" {% if request.args.get('min_rating') == '2' %}selected{% endif %}>2+ Stars</option>
+                                    <option value="3" {% if request.args.get('min_rating') == '3' %}selected{% endif %}>3+ Stars</option>
+                                    <option value="4" {% if request.args.get('min_rating') == '4' %}selected{% endif %}>4+ Stars</option>
+                                    <option value="5" {% if request.args.get('min_rating') == '5' %}selected{% endif %}>5 Stars</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="dietary_requirements" class="form-label">Dietary Requirements</label>
+                                <select class="form-select" id="dietary_requirements" name="dietary_requirements">
+                                    <option value="">No Requirements</option>
+                                    <option value="vegan" {% if request.args.get('dietary_requirements') == 'vegan' %}selected{% endif %}>Vegan</option>
+                                    <option value="vegetarian" {% if request.args.get('dietary_requirements') == 'vegetarian' %}selected{% endif %}>Vegetarian</option>
+                                    <option value="gluten_free" {% if request.args.get('dietary_requirements') == 'gluten_free' %}selected{% endif %}>Gluten-Free</option>
+                                    <option value="keto" {% if request.args.get('dietary_requirements') == 'keto' %}selected{% endif %}>Keto</option>
+                                    <option value="halal" {% if request.args.get('dietary_requirements') == 'halal' %}selected{% endif %}>Halal</option>
+                                    <option value="kosher" {% if request.args.get('dietary_requirements') == 'kosher' %}selected{% endif %}>Kosher</option>
+                                    <option value="allergies" {% if request.args.get('dietary_requirements') == 'allergies' %}selected{% endif %}>Food Allergies</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="row mt-3">
+                            <div class="col-12">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-search me-2"></i>Search Chefs
+                                </button>
+                                <a href="{{ url_for('browse_cooks') }}" class="btn btn-outline-secondary btn-lg ms-2">
+                                    <i class="fas fa-list me-2"></i>View All Chefs
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Featured Chefs Section -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="h3 fw-bold mb-4">Featured Chefs</h2>
+            <div class="row g-4">
+                <!-- This would be populated with featured chefs -->
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 80px; height: 80px;">
+                                <i class="fas fa-user text-white fs-2"></i>
+                            </div>
+                            <h5 class="card-title">Featured Chef</h5>
+                            <p class="text-muted">Premium Persian Cuisine</p>
+                            <div class="mb-3">
+                                <span class="badge bg-warning text-dark me-1">⭐ Featured</span>
+                                <span class="badge bg-success me-1">✓ Verified</span>
+                                <span class="badge bg-info">🏆 Top Rated</span>
+                            </div>
+                            <p class="card-text">Experience authentic Persian cuisine with our featured chef.</p>
+                            <a href="#" class="btn btn-primary">View Profile</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- How It Works Section -->
+    <div class="row">
+        <div class="col-12">
+            <h2 class="h3 fw-bold mb-4">How It Works</h2>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="text-center">
+                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 60px; height: 60px;">
+                            <span class="fw-bold fs-4">1</span>
+                        </div>
+                        <h5>Search & Filter</h5>
+                        <p class="text-muted">Find chefs by location, cuisine, price, and dietary requirements</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="text-center">
+                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 60px; height: 60px;">
+                            <span class="fw-bold fs-4">2</span>
+                        </div>
+                        <h5>Browse Profiles</h5>
+                        <p class="text-muted">View chef profiles, menus, reviews, and portfolio images</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="text-center">
+                        <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 60px; height: 60px;">
+                            <span class="fw-bold fs-4">3</span>
+                        </div>
+                        <h5>Book & Enjoy</h5>
+                        <p class="text-muted">Book your chef and enjoy a personalized dining experience</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
