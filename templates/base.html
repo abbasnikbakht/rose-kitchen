@@ -35,7 +35,7 @@
                         <a class="nav-link" href="{{ url_for('index') }}">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('browse_chefs') }}">Find Chefs</a>
+                        <a class="nav-link" href="{{ url_for('browse_chefs') }}">Find a chef</a>
                     </li>
                     {% if current_user.is_authenticated %}
                         {% if current_user.role == 'chef' %}
@@ -74,7 +74,7 @@
                             <a class="nav-link" href="{{ url_for('login') }}">Login</a>
                         </li>
                         <li class="nav-item">
-                            <a class="btn btn-primary ms-2" href="{{ url_for('register') }}">Sign Up</a>
+                            <a class="btn btn-primary ms-2" href="{{ url_for('register') }}">Chef register</a>
                         </li>
                     {% endif %}
                 </ul>
