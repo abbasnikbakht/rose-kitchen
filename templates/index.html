@@ -154,43 +154,101 @@
 </section>
 {% endif %}
 
-<!-- How It Works Section -->
+<!-- Platform Statistics - Inspired by Preply -->
+{% if stats %}
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col-12">
+                <h2 class="display-5 fw-bold">Join Our Growing Community</h2>
+                <p class="lead text-muted">Experience the best in-home culinary services</p>
+            </div>
+        </div>
+        
+        <div class="row g-4 text-center">
+            <div class="col-md-3">
+                <div class="h2 text-primary fw-bold">{{ stats.total_chefs }}+</div>
+                <p class="text-muted">Professional Chefs</p>
+            </div>
+            <div class="col-md-3">
+                <div class="h2 text-success fw-bold">{{ stats.total_bookings }}+</div>
+                <p class="text-muted">Successful Bookings</p>
+            </div>
+            <div class="col-md-3">
+                <div class="h2 text-warning fw-bold">{{ stats.total_reviews }}+</div>
+                <p class="text-muted">5-Star Reviews</p>
+            </div>
+            <div class="col-md-3">
+                <div class="h2 text-info fw-bold">{{ stats.avg_rating }}</div>
+                <p class="text-muted">Average Rating</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- How It Works Section - Preply Style -->
 <section class="py-5">
     <div class="container">
         <div class="row text-center mb-5">
             <div class="col-12">
-                <h2 class="display-5 fw-bold">{{ get_translated_text('how_it_works') }}</h2>
-                <p class="lead text-muted">{{ get_translated_text('how_it_works_desc') }}</p>
+                <h2 class="display-5 fw-bold">How It Works</h2>
+                <p class="lead text-muted">Get started in just 3 simple steps</p>
             </div>
         </div>
         
         <div class="row g-4">
             <div class="col-md-4">
                 <div class="text-center">
-                    <div class="feature-icon bg-primary text-white">
-                        <span class="fw-bold">1</span>
+                    <div class="feature-icon bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 80px; height: 80px;">
+                        <span class="fw-bold fs-3">1</span>
                     </div>
-                    <h4>{{ get_translated_text('browse_persian_chefs') }}</h4>
-                    <p class="text-muted">{{ get_translated_text('browse_persian_chefs_desc') }}</p>
+                    <h4>Find Your Chef</h4>
+                    <p class="text-muted">Browse our network of professional chefs, read reviews, and find the perfect match for your culinary needs.</p>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="text-center">
-                    <div class="feature-icon bg-primary text-white">
-                        <span class="fw-bold">2</span>
+                    <div class="feature-icon bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 80px; height: 80px;">
+                        <span class="fw-bold fs-3">2</span>
                     </div>
-                    <h4>{{ get_translated_text('book_your_persian_chef') }}</h4>
-                    <p class="text-muted">{{ get_translated_text('book_your_persian_chef_desc') }}</p>
+                    <h4>Book & Plan</h4>
+                    <p class="text-muted">Choose your menu, set the date, and communicate directly with your chef to customize your experience.</p>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="text-center">
-                    <div class="feature-icon bg-primary text-white">
-                        <span class="fw-bold">3</span>
+                    <div class="feature-icon bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 80px; height: 80px;">
+                        <span class="fw-bold fs-3">3</span>
                     </div>
-                    <h4>{{ get_translated_text('enjoy_authentic_cuisine') }}</h4>
-                    <p class="text-muted">{{ get_translated_text('enjoy_authentic_cuisine_desc') }}</p>
+                    <h4>Enjoy & Review</h4>
+                    <p class="text-muted">Sit back and enjoy a personalized culinary experience in your own home, then share your feedback.</p>
                 </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Satisfaction Guarantee - Preply Style -->
+<section class="py-5 bg-primary text-white">
+    <div class="container text-center">
+        <h2 class="display-5 fw-bold mb-4">Satisfaction Guaranteed</h2>
+        <p class="lead mb-4">Not happy with your chef? We'll find you another one for free or provide a full refund.</p>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <i class="fas fa-shield-alt fa-3x mb-3"></i>
+                <h5>100% Secure</h5>
+                <p>All payments are secure and protected</p>
+            </div>
+            <div class="col-md-4">
+                <i class="fas fa-redo fa-3x mb-3"></i>
+                <h5>Free Replacement</h5>
+                <p>Try another chef for free if not satisfied</p>
+            </div>
+            <div class="col-md-4">
+                <i class="fas fa-money-bill-wave fa-3x mb-3"></i>
+                <h5>Full Refund</h5>
+                <p>Complete refund if service doesn't meet expectations</p>
             </div>
         </div>
     </div>

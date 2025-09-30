@@ -122,6 +122,8 @@ class Booking(db.Model):
     gratuity = db.Column(db.Numeric(10, 2), default=0.0)
     status = db.Column(db.String(20), default='pending')  # pending, confirmed, in_progress, completed, cancelled
     payment_status = db.Column(db.String(20), default='pending')  # pending, paid, refunded
+    satisfaction_guarantee = db.Column(db.Boolean, default=True)  # Preply-style guarantee
+    guarantee_used = db.Column(db.Boolean, default=False)  # Track if guarantee was used
     chef_confirmed_at = db.Column(db.DateTime)
     completed_at = db.Column(db.DateTime)
     cancelled_at = db.Column(db.DateTime)
@@ -389,12 +391,39 @@ def load_user(user_id):
 def index():
     try:
         featured_cooks = CookProfile.query.filter_by(is_available=True).limit(6).all()
-        return render_template('index.html', featured_cooks=featured_cooks)
+        
+        # Get platform statistics - inspired by Preply's impressive numbers
+        total_chefs = CookProfile.query.filter_by(is_available=True).count()
+        total_bookings = Booking.query.count()
+        total_reviews = Review.query.count()
+        avg_rating = db.session.query(db.func.avg(Review.rating)).scalar() or 0
+        
+        # Get top specialties
+        all_specialties = db.session.query(CookProfile.specialties).filter_by(is_available=True).all()
+        specialty_counts = {}
+        for spec in all_specialties:
+            if spec[0]:
+                for s in spec[0].split('\n'):
+                    s = s.strip()
+                    if s:
+                        specialty_counts[s] = specialty_counts.get(s, 0) + 1
+        
+        top_specialties = sorted(specialty_counts.items(), key=lambda x: x[1], reverse=True)[:8]
+        
+        stats = {
+            'total_chefs': total_chefs,
+            'total_bookings': total_bookings,
+            'total_reviews': total_reviews,
+            'avg_rating': round(avg_rating, 1) if avg_rating else 0,
+            'top_specialties': top_specialties
+        }
+        
+        return render_template('index.html', featured_cooks=featured_cooks, stats=stats)
     except Exception as e:
         # If database tables don't exist yet, show a setup message
         return f"""
-        <h1>گل سرخ Rose Kitchen</h1>
-        <p>Welcome to Rose Kitchen! The database is being set up.</p>
+        <h1>Personal Chef Marketplace</h1>
+        <p>Welcome to our Chef Marketplace! The database is being set up.</p>
         <p>Please visit <a href="/init-db">/init-db</a> to initialize the database with demo data.</p>
         <p>Error: {str(e)}</p>
         """
@@ -576,6 +605,49 @@ def browse_cooks():
 def search_chefs():
     form = SearchForm()
     return render_template('search_chefs.html', form=form)
+
+@app.route('/chefs-near-me')
+def chefs_near_me():
+    """Find chefs near user's location - inspired by Preply's 'tutors near you'"""
+    # Get user's location from request or session
+    user_city = request.args.get('city', '')
+    user_state = request.args.get('state', '')
+    
+    if user_city or user_state:
+        query = CookProfile.query.filter_by(is_available=True)
+        if user_city:
+            query = query.join(User).filter(User.city.ilike(f'%{user_city}%'))
+        if user_state:
+            query = query.join(User).filter(User.state.ilike(f'%{user_state}%'))
+        
+        chefs = query.order_by(CookProfile.is_featured.desc()).limit(20).all()
+    else:
+        chefs = CookProfile.query.filter_by(is_available=True).order_by(CookProfile.is_featured.desc()).limit(20).all()
+    
+    return render_template('chefs_near_me.html', chefs=chefs, user_city=user_city, user_state=user_state)
+
+@app.route('/chef-specialties')
+def chef_specialties():
+    """Browse chefs by specialty - like Preply's language categories"""
+    specialty = request.args.get('specialty', '')
+    
+    if specialty:
+        chefs = CookProfile.query.filter(
+            CookProfile.is_available == True,
+            CookProfile.specialties.ilike(f'%{specialty}%')
+        ).order_by(CookProfile.is_featured.desc()).all()
+    else:
+        chefs = []
+    
+    # Get all available specialties for the filter
+    all_specialties = db.session.query(CookProfile.specialties).filter_by(is_available=True).all()
+    specialties_list = set()
+    for spec in all_specialties:
+        if spec[0]:
+            for s in spec[0].split('\n'):
+                specialties_list.add(s.strip())
+    
+    return render_template('chef_specialties.html', chefs=chefs, specialty=specialty, specialties=sorted(specialties_list))
 
 @app.route('/cook/<int:cook_id>')
 def cook_profile(cook_id):

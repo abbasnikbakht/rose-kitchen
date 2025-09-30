@@ -227,11 +227,29 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('index') }}">{{ get_translated_text('home') }}</a>
+                        <a class="nav-link" href="{{ url_for('index') }}">Home</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="findChefsDropdown" role="button" data-bs-toggle="dropdown">
+                            Find Chefs
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{{ url_for('browse_cooks') }}">Browse All Chefs</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('chefs_near_me') }}">Chefs Near Me</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('chef_specialties') }}">By Cuisine</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('search_chefs') }}">Advanced Search</a></li>
+                        </ul>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ url_for('browse_cooks') }}">{{ get_translated_text('cooks') }}</a>
+                        <a class="nav-link" href="{{ url_for('browse_cooks') }}">Browse Chefs</a>
                     </li>
+                    {% if current_user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url_for('messages') }}">
+                                <i class="fas fa-comments me-1"></i>Messages
+                            </a>
+                        </li>
+                    {% endif %}
                 </ul>
                 
                 <ul class="navbar-nav">
