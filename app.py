@@ -678,6 +678,20 @@ def review_booking(booking_id):
     
     return render_template('reviews/create.html', form=form, booking=booking)
 
+# Database migration route (for production deployment)
+@app.route('/migrate-db')
+def migrate_database():
+    """Create database tables - for production deployment"""
+    try:
+        with app.app_context():
+            db.create_all()
+            from sqlalchemy import inspect
+            inspector = inspect(db.engine)
+            tables = inspector.get_table_names()
+            return f"Database migration successful! Created tables: {tables}"
+    except Exception as e:
+        return f"Migration failed: {str(e)}", 500
+
 # Admin routes
 @app.route('/admin/dashboard')
 @login_required
@@ -722,10 +736,20 @@ if __name__ == '__main__':
     
     with app.app_context():
         try:
+            # Create all tables
             db.create_all()
             print("Database initialized successfully")
+            
+            # Verify tables exist
+            from sqlalchemy import inspect
+            inspector = inspect(db.engine)
+            tables = inspector.get_table_names()
+            print(f"Database tables: {tables}")
+            
         except Exception as e:
             print(f"Database initialization error: {e}")
+            import traceback
+            traceback.print_exc()
             sys.exit(1)
     
     print("Starting server at http://localhost:5000")
