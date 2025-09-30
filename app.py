@@ -728,7 +728,21 @@ def internal_error(error):
 # Initialize database
 def create_tables():
     with app.app_context():
+        try:
+            db.create_all()
+            print("Database tables created successfully")
+        except Exception as e:
+            print(f"Error creating tables: {e}")
+            import traceback
+            traceback.print_exc()
+
+# Initialize database on app startup (for production)
+with app.app_context():
+    try:
         db.create_all()
+        print("Production database initialized")
+    except Exception as e:
+        print(f"Production database init error: {e}")
 
 if __name__ == '__main__':
     print("Starting Chef Marketplace Platform...")
