@@ -4,20 +4,52 @@
 
 {% block content %}
 <!-- Hero Section -->
-<section class="hero-section bg-gradient-primary text-white py-5">
+<section class="hero-section py-5">
     <div class="container">
         <div class="row align-items-center min-vh-50">
             <div class="col-lg-6">
-                <h1 class="display-4 fw-bold mb-4">Professional Chefs at Your Door</h1>
-                <p class="lead mb-4">Experience restaurant-quality dining in the comfort of your home. Connect with skilled chefs who bring culinary excellence to your kitchen.</p>
+                <h1 class="display-4 fw-bold mb-4 text-dark">Learn faster with your best chef.</h1>
+                <p class="lead mb-4 text-muted">Experience restaurant-quality dining in the comfort of your home. Connect with skilled chefs who bring culinary excellence to your kitchen.</p>
                 <div class="d-flex gap-3">
-                    <a href="{{ url_for('browse_chefs') }}" class="btn btn-light btn-lg">Find a Chef</a>
-                    <a href="{{ url_for('register') }}" class="btn btn-outline-light btn-lg">Join as Chef</a>
+                    <a href="{{ url_for('browse_chefs') }}" class="btn btn-primary btn-lg">Get started</a>
+                    <a href="{{ url_for('register') }}" class="btn btn-outline-primary btn-lg">Become a chef</a>
                 </div>
             </div>
             <div class="col-lg-6">
                 <div class="hero-image text-center">
-                    <i class="fas fa-utensils display-1 opacity-75"></i>
+                    <i class="fas fa-utensils display-1 text-primary opacity-75"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-3 mb-4">
+                <div class="stat-item">
+                    <h3 class="display-6 fw-bold text-primary">100+</h3>
+                    <p class="text-muted mb-0">Experienced chefs</p>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="stat-item">
+                    <h3 class="display-6 fw-bold text-primary">1,000+</h3>
+                    <p class="text-muted mb-0">5-star reviews</p>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="stat-item">
+                    <h3 class="display-6 fw-bold text-primary">50+</h3>
+                    <p class="text-muted mb-0">Cuisine types</p>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="stat-item">
+                    <h3 class="display-6 fw-bold text-primary">25+</h3>
+                    <p class="text-muted mb-0">Cities served</p>
                 </div>
             </div>
         </div>
@@ -29,40 +61,52 @@
     <div class="container">
         <div class="row text-center mb-5">
             <div class="col-lg-8 mx-auto">
-                <h2 class="display-5 fw-bold mb-3">Why Choose Chef Marketplace?</h2>
-                <p class="lead text-muted">We make it easy to bring professional culinary experiences to your home</p>
+                <h2 class="display-5 fw-bold mb-3">Progress starts with the right chef</h2>
+                <p class="lead text-muted">2M+ satisfied customers. Over 100 chefs. Culinary experiences that are personal (and proven).</p>
             </div>
         </div>
         
         <div class="row g-4">
             <div class="col-md-4">
-                <div class="feature-card text-center p-4 h-100">
-                    <div class="feature-icon bg-primary text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
-                        <i class="fas fa-star fa-2x"></i>
+                <div class="feature-card text-center p-4 h-100 border-0">
+                    <div class="feature-icon bg-primary text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                        <i class="fas fa-star fa-lg"></i>
                     </div>
-                    <h4 class="fw-bold mb-3">Verified Chefs</h4>
-                    <p class="text-muted">All our chefs are professionally verified with background checks, certifications, and proven experience.</p>
+                    <h4 class="fw-bold mb-3">Find your chef.</h4>
+                    <p class="text-muted">We'll connect you with a chef who motivates, challenges, and supports you — from first meal to culinary mastery.</p>
                 </div>
             </div>
             
             <div class="col-md-4">
-                <div class="feature-card text-center p-4 h-100">
-                    <div class="feature-icon bg-success text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
-                        <i class="fas fa-shield-alt fa-2x"></i>
+                <div class="feature-card text-center p-4 h-100 border-0">
+                    <div class="feature-icon bg-success text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                        <i class="fas fa-utensils fa-lg"></i>
                     </div>
-                    <h4 class="fw-bold mb-3">Safe & Secure</h4>
-                    <p class="text-muted">Secure payments, insurance coverage, and safety protocols ensure peace of mind for every booking.</p>
+                    <h4 class="fw-bold mb-3">Start cooking.</h4>
+                    <p class="text-muted">Your chef will tailor every meal to your preferences, so progress feels personal from the very beginning.</p>
                 </div>
             </div>
             
             <div class="col-md-4">
-                <div class="feature-card text-center p-4 h-100">
-                    <div class="feature-icon bg-warning text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 80px; height: 80px;">
-                        <i class="fas fa-heart fa-2x"></i>
+                <div class="feature-card text-center p-4 h-100 border-0">
+                    <div class="feature-icon bg-warning text-white rounded-circle mx-auto mb-3 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                        <i class="fas fa-chart-line fa-lg"></i>
                     </div>
-                    <h4 class="fw-bold mb-3">Personalized Experience</h4>
-                    <p class="text-muted">Custom menus, dietary accommodations, and personalized service tailored to your preferences.</p>
+                    <h4 class="fw-bold mb-3">Make progress every week.</h4>
+                    <p class="text-muted">Choose how many meals you want to book and build lasting culinary confidence, one experience at a time.</p>
                 </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Guarantee Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-lg-8 mx-auto">
+                <h2 class="display-6 fw-bold mb-3">Meals you'll love. Guaranteed.</h2>
+                <p class="lead text-muted">Try another chef for free if you're not satisfied.</p>
             </div>
         </div>
     </div>
