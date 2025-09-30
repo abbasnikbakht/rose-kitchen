@@ -390,28 +390,36 @@ def register():
     if current_user.is_authenticated:
         return redirect(url_for('dashboard'))
     
-    form = RegistrationForm()
-    if form.validate_on_submit():
-        if form.password.data != form.password2.data:
-            flash('Passwords do not match', 'error')
-            return render_template('auth/register.html', form=form)
+    try:
+        form = RegistrationForm()
+        if form.validate_on_submit():
+            if form.password.data != form.password2.data:
+                flash('Passwords do not match', 'error')
+                return render_template('auth/register.html', form=form)
+            
+            user = User(
+                email=form.email.data,
+                first_name=form.first_name.data,
+                last_name=form.last_name.data,
+                phone=form.phone.data,
+                role=form.role.data
+            )
+            user.set_password(form.password.data)
+            
+            db.session.add(user)
+            db.session.commit()
+            
+            flash('Registration successful! Please log in.', 'success')
+            return redirect(url_for('login'))
         
-        user = User(
-            email=form.email.data,
-            first_name=form.first_name.data,
-            last_name=form.last_name.data,
-            phone=form.phone.data,
-            role=form.role.data
-        )
-        user.set_password(form.password.data)
+        return render_template('auth/register.html', form=form)
         
-        db.session.add(user)
-        db.session.commit()
-        
-        flash('Registration successful! Please log in.', 'success')
-        return redirect(url_for('login'))
-    
-    return render_template('auth/register.html', form=form)
+    except Exception as e:
+        print(f"Registration error: {e}")
+        import traceback
+        traceback.print_exc()
+        flash('Registration failed. Please try again.', 'error')
+        return render_template('auth/register.html', form=form)
 
 @app.route('/logout')
 @login_required
@@ -717,6 +725,34 @@ def review_booking(booking_id):
         return redirect(url_for('booking_detail', booking_id=booking_id))
     
     return render_template('reviews/create.html', form=form, booking=booking)
+
+# Debug route to check database status
+@app.route('/debug-db')
+def debug_database():
+    """Debug database status"""
+    try:
+        with app.app_context():
+            from sqlalchemy import inspect
+            inspector = inspect(db.engine)
+            tables = inspector.get_table_names()
+            
+            result = f"Database tables: {tables}\n"
+            
+            if 'user' in tables:
+                user_columns = [col['name'] for col in inspector.get_columns('user')]
+                result += f"User table columns: {user_columns}\n"
+            
+            if 'chef_profile' in tables:
+                chef_columns = [col['name'] for col in inspector.get_columns('chef_profile')]
+                result += f"Chef profile columns: {chef_columns}\n"
+            
+            if 'booking' in tables:
+                booking_columns = [col['name'] for col in inspector.get_columns('booking')]
+                result += f"Booking columns: {booking_columns}\n"
+            
+            return f"<pre>{result}</pre>"
+    except Exception as e:
+        return f"Database debug error: {str(e)}", 500
 
 # Database migration route (for production deployment)
 @app.route('/migrate-db')
