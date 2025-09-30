@@ -711,6 +711,24 @@ def create_tables():
         db.create_all()
 
 if __name__ == '__main__':
+    print("Starting Chef Marketplace Platform...")
+    print("Initializing database...")
+    
     with app.app_context():
-        db.create_all()
-    app.run(debug=True)
+        try:
+            db.create_all()
+            print("Database initialized successfully")
+        except Exception as e:
+            print(f"Database initialization error: {e}")
+            sys.exit(1)
+    
+    print("Starting server at http://localhost:5000")
+    print("Press Ctrl+C to stop the server")
+    
+    try:
+        app.run(host='0.0.0.0', port=5000, debug=True)
+    except KeyboardInterrupt:
+        print("\nServer stopped")
+    except Exception as e:
+        print(f"Server error: {e}")
+        sys.exit(1)
