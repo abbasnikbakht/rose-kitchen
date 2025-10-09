@@ -1,6 +1,6 @@
 """
-Personal Chef Marketplace Platform
-A comprehensive platform connecting clients with professional chefs for in-home cooking services.
+HomeTaste - Local Home Cooks & Private Chefs
+A comprehensive platform connecting clients with local home cooks and professional chefs for authentic home-cooked meals.
 """
 
 import os
@@ -222,7 +222,7 @@ class RegistrationForm(FlaskForm):
     phone = StringField('Phone Number', validators=[Optional()])
     password = PasswordField('Password', validators=[DataRequired(), Length(min=6)])
     password2 = PasswordField('Confirm Password', validators=[DataRequired()])
-    role = SelectField('I want to', choices=[('client', 'Hire a Chef'), ('chef', 'Work as a Chef')], validators=[DataRequired()])
+    role = SelectField('I want to', choices=[('client', 'Order Home-Cooked Meals'), ('chef', 'Cook for Others')], validators=[DataRequired()])
     submit = SubmitField('Register')
     
     def validate_email(self, email):
@@ -856,7 +856,7 @@ with app.app_context():
         print(f"Production database init error: {e}")
 
 if __name__ == '__main__':
-    print("Starting Chef Marketplace Platform...")
+    print("Starting HomeTaste Platform...")
     print("Initializing database...")
     
     with app.app_context():

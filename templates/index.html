@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Chef Marketplace - Professional In-Home Cooking Services{% endblock %}
+{% block title %}HomeTaste - Local Home Cooks & Private Chefs{% endblock %}
 
 {% block content %}
 <!-- Hero Section -->
@@ -8,19 +8,19 @@
     <div class="container">
         <div class="row align-items-center min-vh-50">
             <div class="col-lg-6">
-                <h1 class="display-4 fw-bold mb-4 text-dark">Hire a Private Chef at Home Today</h1>
-                <p class="lead mb-4 text-muted">Enjoy a customized culinary experience with a Private Chef in the comfort of your own home.</p>
+                <h1 class="display-4 fw-bold mb-4 text-dark">Enjoy Authentic Home-Cooked Meals</h1>
+                <p class="lead mb-4 text-muted">Connect with local home cooks and private chefs for fresh, authentic meals made with love in your community.</p>
                 <div class="d-flex gap-3">
                     <a href="{{ url_for('browse_chefs') }}" class="btn btn-primary btn-lg">Get started</a>
-                    <a href="{{ url_for('register') }}" class="btn btn-outline-primary btn-lg">Become a chef</a>
+                    <a href="{{ url_for('register') }}" class="btn btn-outline-primary btn-lg">Become a Home Cook</a>
                 </div>
             </div>
             <div class="col-lg-6">
                 <div class="hero-image text-center">
                     <div class="chef-showcase">
                         <div class="chef-card">
-                            <i class="fas fa-user-tie fa-3x text-primary mb-3"></i>
-                            <h5>Private Chef</h5>
+                            <i class="fas fa-home fa-3x text-primary mb-3"></i>
+                            <h5>Home Cooks</h5>
                         </div>
                         <div class="chef-card">
                             <i class="fas fa-graduation-cap fa-3x text-success mb-3"></i>
@@ -28,7 +28,7 @@
                         </div>
                         <div class="chef-card">
                             <i class="fas fa-utensils fa-3x text-warning mb-3"></i>
-                            <h5>Custom Menus</h5>
+                            <h5>Authentic Meals</h5>
                         </div>
                     </div>
                 </div>
