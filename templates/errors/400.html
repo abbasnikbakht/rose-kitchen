@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Bad Request - HomeTaste{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 text-center">
+            <div class="error-page">
+                <h1 class="display-1 text-primary">400</h1>
+                <h2 class="mb-4">Bad Request</h2>
+                <p class="lead text-muted mb-4">The request you made was invalid or malformed.</p>
+                <a href="{{ url_for('index') }}" class="btn btn-primary">Go Home</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

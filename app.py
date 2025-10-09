@@ -11,13 +11,15 @@ from flask_login import LoginManager, UserMixin, login_user, logout_user, login_
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from wtforms import StringField, TextAreaField, SelectField, IntegerField, DecimalField, DateField, TimeField, PasswordField, BooleanField, SubmitField
-from wtforms.validators import DataRequired, Email, Length, NumberRange, Optional
+from wtforms.validators import DataRequired, Email, Length, NumberRange, Optional, ValidationError
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from PIL import Image
 import stripe
 import json
 from functools import wraps
+import logging
+from logging.handlers import RotatingFileHandler
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -229,6 +231,16 @@ class RegistrationForm(FlaskForm):
         user = User.query.filter_by(email=email.data).first()
         if user:
             raise ValidationError('Email already registered. Please use a different email.')
+    
+    def validate_password(self, password):
+        if len(password.data) < 8:
+            raise ValidationError('Password must be at least 8 characters long.')
+        if not any(c.isupper() for c in password.data):
+            raise ValidationError('Password must contain at least one uppercase letter.')
+        if not any(c.islower() for c in password.data):
+            raise ValidationError('Password must contain at least one lowercase letter.')
+        if not any(c.isdigit() for c in password.data):
+            raise ValidationError('Password must contain at least one number.')
 
 class ChefProfileForm(FlaskForm):
     bio = TextAreaField('Bio', validators=[DataRequired(), Length(min=50, max=1000)])
@@ -351,12 +363,23 @@ def calculate_booking_total(chef_profile, guest_count, menu_price=None):
 # Routes
 @app.route('/')
 def index():
-    """Home page"""
+    """Home page with optimized queries"""
     try:
-        featured_chefs = ChefProfile.query.filter_by(is_available=True).order_by(ChefProfile.rating.desc()).limit(6).all()
-        recent_reviews = Review.query.order_by(Review.created_at.desc()).limit(3).all()
+        # Optimized query with eager loading
+        featured_chefs = ChefProfile.query.filter_by(is_available=True)\
+            .options(db.joinedload(ChefProfile.user))\
+            .order_by(ChefProfile.rating.desc())\
+            .limit(6).all()
+        
+        # Optimized reviews query
+        recent_reviews = Review.query\
+            .options(db.joinedload(Review.client), db.joinedload(Review.chef_reviewed))\
+            .order_by(Review.created_at.desc())\
+            .limit(3).all()
+            
+        app.logger.info(f"Homepage loaded with {len(featured_chefs)} featured chefs")
     except Exception as e:
-        print(f"Database query error: {e}")
+        app.logger.error(f"Database query error: {e}")
         featured_chefs = []
         recent_reviews = []
     
@@ -431,8 +454,13 @@ def logout():
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    """User dashboard"""
+    """User dashboard with onboarding check"""
+    # Check if user needs onboarding
     if current_user.role == 'chef':
+        chef_profile = current_user.chef_profile
+        if not chef_profile:
+            flash('Complete your chef profile to get started!', 'info')
+            return redirect(url_for('chef_profile'))
         return redirect(url_for('chef_dashboard'))
     elif current_user.role == 'admin':
         return redirect(url_for('admin_dashboard'))
@@ -551,35 +579,70 @@ def chef_profile():
 
 @app.route('/chefs')
 def browse_chefs():
-    """Browse all chefs"""
+    """Browse all chefs with advanced filtering"""
     page = request.args.get('page', 1, type=int)
     cuisine_filter = request.args.get('cuisine', '')
     price_min = request.args.get('price_min', type=float)
     price_max = request.args.get('price_max', type=float)
     rating_min = request.args.get('rating_min', type=float)
+    location_filter = request.args.get('location', '')
+    service_type_filter = request.args.get('service_type', '')
+    sort_by = request.args.get('sort', 'rating')  # rating, price_low, price_high, newest
     
     query = ChefProfile.query.filter_by(is_available=True)
     
+    # Cuisine filtering
     if cuisine_filter:
         query = query.filter(ChefProfile.specialties.contains(cuisine_filter))
     
+    # Price filtering
     if price_min:
         query = query.filter(ChefProfile.base_price_per_person >= price_min)
     
     if price_max:
         query = query.filter(ChefProfile.base_price_per_person <= price_max)
     
+    # Rating filtering
     if rating_min:
         query = query.filter(ChefProfile.rating >= rating_min)
     
-    chefs = query.order_by(ChefProfile.rating.desc()).paginate(
+    # Location filtering (service areas)
+    if location_filter:
+        query = query.filter(ChefProfile.service_areas.contains(location_filter))
+    
+    # Service type filtering (cooking only vs cooking + teaching)
+    if service_type_filter == 'teaching':
+        query = query.filter(ChefProfile.offers_teaching == True)
+    
+    # Sorting
+    if sort_by == 'price_low':
+        query = query.order_by(ChefProfile.base_price_per_person.asc())
+    elif sort_by == 'price_high':
+        query = query.order_by(ChefProfile.base_price_per_person.desc())
+    elif sort_by == 'newest':
+        query = query.order_by(ChefProfile.created_at.desc())
+    else:  # default: rating
+        query = query.order_by(ChefProfile.rating.desc())
+    
+    chefs = query.paginate(
         page=page, per_page=12, error_out=False
     )
     
-    return render_template('chefs/browse.html', chefs=chefs, 
+    # Get filter options for the UI
+    all_cuisines = ['persian', 'indian', 'chinese', 'italian', 'french', 'mexican', 'japanese', 'thai', 'mediterranean', 'american', 'filipino', 'korean', 'vietnamese']
+    all_locations = ['Metrotown', 'Brentwood', 'Edmonds', 'Lougheed', 'Burnaby Heights', 'Deer Lake', 'Highgate', 'Kingsway']
+    
+    return render_template('chefs/browse.html', 
+                         chefs=chefs, 
                          cuisine_filter=cuisine_filter,
-                         price_min=price_min, price_max=price_max,
-                         rating_min=rating_min)
+                         price_min=price_min, 
+                         price_max=price_max,
+                         rating_min=rating_min,
+                         location_filter=location_filter,
+                         service_type_filter=service_type_filter,
+                         sort_by=sort_by,
+                         all_cuisines=all_cuisines,
+                         all_locations=all_locations)
 
 @app.route('/chef/<int:chef_id>')
 def chef_detail(chef_id):
@@ -826,15 +889,35 @@ def admin_dashboard():
                          pending_bookings=pending_bookings,
                          recent_bookings=recent_bookings)
 
-# Error handlers
+# Enhanced Error handlers
+@app.errorhandler(400)
+def bad_request_error(error):
+    return render_template('errors/400.html'), 400
+
+@app.errorhandler(401)
+def unauthorized_error(error):
+    return render_template('errors/401.html'), 401
+
+@app.errorhandler(403)
+def forbidden_error(error):
+    return render_template('errors/403.html'), 403
+
 @app.errorhandler(404)
 def not_found_error(error):
     return render_template('errors/404.html'), 404
+
+@app.errorhandler(413)
+def too_large_error(error):
+    return render_template('errors/413.html'), 413
 
 @app.errorhandler(500)
 def internal_error(error):
     db.session.rollback()
     return render_template('errors/500.html'), 500
+
+@app.errorhandler(503)
+def service_unavailable_error(error):
+    return render_template('errors/503.html'), 503
 
 # Initialize database
 def create_tables():
@@ -847,13 +930,28 @@ def create_tables():
             import traceback
             traceback.print_exc()
 
+# Configure logging
+if not app.debug:
+    if not os.path.exists('logs'):
+        os.mkdir('logs')
+    file_handler = RotatingFileHandler('logs/hometaste.log', maxBytes=10240, backupCount=10)
+    file_handler.setFormatter(logging.Formatter(
+        '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'
+    ))
+    file_handler.setLevel(logging.INFO)
+    app.logger.addHandler(file_handler)
+    app.logger.setLevel(logging.INFO)
+    app.logger.info('HomeTaste startup')
+
 # Initialize database on app startup (for production)
 with app.app_context():
     try:
         db.create_all()
         print("Production database initialized")
+        app.logger.info("Database initialized successfully")
     except Exception as e:
         print(f"Production database init error: {e}")
+        app.logger.error(f"Database initialization error: {e}")
 
 if __name__ == '__main__':
     print("Starting HomeTaste Platform...")

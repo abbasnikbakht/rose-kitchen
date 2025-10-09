@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Find Chefs - Chef Marketplace{% endblock %}
+{% block title %}Find Home Cooks - HomeTaste{% endblock %}
 
 {% block content %}
 <div class="container py-5">
@@ -9,35 +9,48 @@
         <div class="col-12">
             <div class="card shadow-sm">
                 <div class="card-body">
-                    <h3 class="fw-bold mb-4">Find Your Perfect Chef</h3>
+                    <h3 class="fw-bold mb-4">Find Your Perfect Home Cook</h3>
                     
                     <form method="GET" class="row g-3">
-                        <div class="col-md-3">
+                        <div class="col-md-2">
                             <label for="cuisine" class="form-label">Cuisine Type</label>
                             <select name="cuisine" id="cuisine" class="form-select">
                                 <option value="">All Cuisines</option>
-                                <option value="italian" {% if cuisine_filter == 'italian' %}selected{% endif %}>Italian</option>
-                                <option value="french" {% if cuisine_filter == 'french' %}selected{% endif %}>French</option>
-                                <option value="asian" {% if cuisine_filter == 'asian' %}selected{% endif %}>Asian</option>
-                                <option value="mexican" {% if cuisine_filter == 'mexican' %}selected{% endif %}>Mexican</option>
-                                <option value="mediterranean" {% if cuisine_filter == 'mediterranean' %}selected{% endif %}>Mediterranean</option>
-                                <option value="american" {% if cuisine_filter == 'american' %}selected{% endif %}>American</option>
-                                <option value="indian" {% if cuisine_filter == 'indian' %}selected{% endif %}>Indian</option>
-                                <option value="japanese" {% if cuisine_filter == 'japanese' %}selected{% endif %}>Japanese</option>
+                                {% for cuisine in all_cuisines %}
+                                <option value="{{ cuisine }}" {% if cuisine_filter == cuisine %}selected{% endif %}>{{ cuisine.title() }}</option>
+                                {% endfor %}
                             </select>
                         </div>
                         
                         <div class="col-md-2">
+                            <label for="location" class="form-label">Location</label>
+                            <select name="location" id="location" class="form-select">
+                                <option value="">All Areas</option>
+                                {% for location in all_locations %}
+                                <option value="{{ location }}" {% if location_filter == location %}selected{% endif %}>{{ location }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-2">
+                            <label for="service_type" class="form-label">Service Type</label>
+                            <select name="service_type" id="service_type" class="form-select">
+                                <option value="">All Services</option>
+                                <option value="teaching" {% if service_type_filter == 'teaching' %}selected{% endif %}>Cooking Lessons</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-1">
                             <label for="price_min" class="form-label">Min Price</label>
                             <input type="number" name="price_min" id="price_min" class="form-control" placeholder="$25" value="{{ price_min or '' }}">
                         </div>
                         
-                        <div class="col-md-2">
+                        <div class="col-md-1">
                             <label for="price_max" class="form-label">Max Price</label>
                             <input type="number" name="price_max" id="price_max" class="form-control" placeholder="$200" value="{{ price_max or '' }}">
                         </div>
                         
-                        <div class="col-md-2">
+                        <div class="col-md-1">
                             <label for="rating_min" class="form-label">Min Rating</label>
                             <select name="rating_min" id="rating_min" class="form-select">
                                 <option value="">Any Rating</option>
@@ -45,6 +58,16 @@
                                 <option value="4.0" {% if rating_min == 4.0 %}selected{% endif %}>4.0+ Stars</option>
                                 <option value="3.5" {% if rating_min == 3.5 %}selected{% endif %}>3.5+ Stars</option>
                                 <option value="3.0" {% if rating_min == 3.0 %}selected{% endif %}>3.0+ Stars</option>
+                            </select>
+                        </div>
+                        
+                        <div class="col-md-1">
+                            <label for="sort" class="form-label">Sort By</label>
+                            <select name="sort" id="sort" class="form-select">
+                                <option value="rating" {% if sort_by == 'rating' %}selected{% endif %}>Rating</option>
+                                <option value="price_low" {% if sort_by == 'price_low' %}selected{% endif %}>Price: Low to High</option>
+                                <option value="price_high" {% if sort_by == 'price_high' %}selected{% endif %}>Price: High to Low</option>
+                                <option value="newest" {% if sort_by == 'newest' %}selected{% endif %}>Newest</option>
                             </select>
                         </div>
                         
